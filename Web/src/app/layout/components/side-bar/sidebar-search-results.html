@@ -1,0 +1,17 @@
+<div class="row justify-content-start">
+  <div class="d-inline-block">
+    <div class="input-group mb-2 mb-sm-0 ">
+      <p-autoComplete inputStyleClass="col-md-12" [(ngModel)]="searchItem" (onClear)="onClear($event)" (onSelect)="onChange($event)"
+        [suggestions]="filteredResults" (completeMethod)="filterResults($event)" [size]="40" [minLength]="2" [placeholder]="placeholder">
+      </p-autoComplete>
+    </div>
+  </div>
+</div>
+
+<div class="row search-list autospyscroll">
+  <ul class="list-group mt-2 col-md-12" style="padding-right:0px">
+    <li class="list-group-item result-items" [class.active]="selectedSearchItemId === gc.value" *ngFor="let gc of searchResults; let i = index" [attr.data-badge]="i+1" (click)="selectResultItem(gc)">
+      {{gc.text}}
+    </li>
+  </ul>
+</div>

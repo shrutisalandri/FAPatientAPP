@@ -1,0 +1,74 @@
+<section class="content top_padding">
+  <div @fadeInAnimation class="row">
+    <div class="col-md-6 col-sm-12 mb-2">
+      <div class="card fade-anim ">
+        <div class="card-header text-center">
+          Customer
+        </div>
+        <div class="card-body">
+
+          <h5 class="card-title"> Search Customer</h5>
+          <p class="card-text">
+            Admin can search customers.
+          </p>
+          <h5 class="card-title">Add/Edit Customer</h5>
+          <p class="card-text">
+            Admin can add or edit customers
+          </p>
+
+        </div>
+        <div class="card-footer text-right text-muted">
+          <a [routerLink]="'/customer'"> Go
+            <i class="fa fa-chevron-right "></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-md-6 col-sm-12 mb-2">
+      <div class="card fade-anim  ">
+        <div class="card-header text-center">
+          Client
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Search Client</h5>
+          <p class="card-text">
+            Admin or Customer can search clients
+          </p>
+          <h5 class="card-title">Add/Edit Client</h5>
+          <p class="card-text">
+            Admin or Customer can Add or Edit clients
+          </p>
+        </div>
+        <div class="card-footer text-right text-muted">
+          <a [routerLink]="'/client/add'"> Go
+            <i class="fa fa-chevron-right "></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 offset-md-3 col-sm-12 mb-2">
+      <div class="card fade-anim ">
+        <div class="card-header text-center">
+          Client API
+        </div>
+        <div class="card-body">
+          <h5 class="card-title"> Search Client API</h5>
+          <p class="card-text">
+            Admin or Client or User can search any client API belongings to particualr client.
+          </p>
+          <h5 class="card-title">Add/Edit Client API</h5>
+          <p class="card-text">
+            Admin or Client or User can add or edit API's
+          </p>
+        </div>
+        <div class="card-footer text-right text-muted">
+          <a [routerLink]="'/client'"> Go
+            <i class="fa fa-chevron-right "></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

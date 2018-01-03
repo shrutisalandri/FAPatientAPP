@@ -1,0 +1,38 @@
+@import '../../color-variables';
+.autospyscroll:hover {
+    overflow-y: auto;
+}
+
+.autospyscroll {
+    overflow: hidden;
+    max-height: calc(100vh - 75px);
+}
+
+.result-items:hover {
+    cursor: pointer;
+}
+
+.result-items:focus, .result-items:hover {
+    text-decoration: none;
+}
+
+.search-list{
+
+ li:nth-child(odd) {
+  background-color: rgba(0,172,221, 0.1);
+}
+li:hover, {
+  background-color: rgba(0,172,221, 0.2);
+  color: black !important;
+
+}
+.list-group-item.active{
+  background: $theme-color !important;
+}
+li{
+  color: black !important;
+}
+li.active:hover{
+  color: black !important;
+}
+}

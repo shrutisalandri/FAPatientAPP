@@ -1,0 +1,125 @@
+@import '../../sass/conf/conf';
+@import '../../color-variables';
+
+.side-bar {
+    z-index: 99;
+    background: #FFF;
+}
+
+.right-content .breadcrumb {
+    border-radius: 0 !important;
+    padding: 5px 10px !important;
+}
+
+.add-icon a {
+    color: #FFF !important;
+}
+
+.searcher.active {
+    display: block;
+    margin-left: 0;
+    -webkit-transition: all 3s ease;
+    transition: all 3s ease;
+    padding: 5px;
+}
+
+.breadcrumb li:last-child {
+    margin-left: auto;
+    margin-right: 5px;
+}
+
+.toggle-close-icon {
+    span, a {
+        height: 30px;
+        width: 25px;
+        writing-mode: vertical-lr;
+        margin-top: 3px;
+        color: red;
+        background: #FFF;
+        border-radius: 70px 0px 0px 70px;
+    }
+
+    i {
+        margin: 5px 0 0 5px;
+    }
+}
+
+.search-icon {
+    span, a {
+        height: 30px;
+        width: 30px;
+        writing-mode: vertical-lr;
+        margin-top: 3px;
+        color: white;
+    }
+}
+
+@media screen and (max-width:575px) {
+    .toggle-icon {
+        display: block;
+        left: 0;
+        margin-left: -20px;
+        position: absolute;
+    }
+
+    .overlay-sidebar-bar.active {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.76);
+        z-index: 1;
+        color: rgb(230, 230, 230);
+    }
+
+    .search-icon {
+        border-radius: 0 50px 50px 0px;
+        color: #ffffff;
+        background: $theme-color;
+    }
+
+    .searcher {
+        display: none;
+    }
+}
+
+@media screen and (min-width:576px) {
+    .toggle-icon {
+        display: none;
+    }
+
+    .searcher {
+        display: block;
+    }
+}
+
+@media screen and (min-width:768px) {
+    .toggle-icon {
+        display: none;
+    }
+
+    .searcher {
+        display: block;
+    }
+}
+
+@media screen and (min-width:992px) {
+    .toggle-icon {
+        display: none;
+    }
+
+    .searcher {
+        display: block;
+    }
+}
+
+@media screen and (min-width:1200px) {
+    .toggle-icon {
+        display: none;
+    }
+
+    .searcher {
+        display: block;
+    }
+}

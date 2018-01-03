@@ -1,0 +1,52 @@
+<div class="clearfix" ggkScrollPosition maxHeight="50" (scrollChange)="scrolledChanged($event)" [class.scrolled]="isScrolled">
+    <nav class="page-top navbar fixed-top navbar-light navbar-expand-md">
+        <a routerLink="/dashboard" class="al-logo clearfix">
+            <span class="resizelogo">
+                <img src="{{ ( 'app_logo-inner' | appPicture:'PNG' ) }}" border="0" alt="API Configuration Tool" title="Extract Systems">
+            </span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto"></ul>
+            <ul class="navbar-nav pull-sm-right">
+                <li class="nav-item  mt-1 mb-1 mr-2">
+                    <p-dropdown *ngIf="userDetails.roleName==role[role.Admin]" [options]="customers" [(ngModel)]="selectedCustomer" placeholder="--customer--" scrollHeight="200px" #customer (onChange)="onCustomerChange($event, customer.value)" data-toggle="tooltip" data-placement="left"
+                                title="Customer"></p-dropdown>
+                    <label class="mt-1" *ngIf="userDetails.roleName==role[role.Customer]">{{loggedinCustomer.text}}</label>
+                </li>
+                <li class="nav-item  mt-1 mb-1">
+                    <p-dropdown [options]="clients" [disabled]="clients.length ==0 " [(ngModel)]="selectedClient" placeholder="--client--" scrollHeight="200px" #client (onChange)="onClientChange($event,client.value)" data-toggle="tooltip" data-placement="right"
+                                title="Client"></p-dropdown>
+                </li>
+                <span class="nav-space">|</span>
+                <ng-container *ngFor="let menuItem of menuList">
+                    <li class="nav-item" [class.active]="activeMenuItem == menuItem.title">
+                        <a class="nav-link" [routerLink]="menuItem.link" (click)="routeItemClick(menuItem)" data-toggle="tooltip" data-placement="bottom"
+                           [title]="menuItem.title">
+                            <i [class]="menuItem.icon"></i>
+                        </a>
+                    </li>
+                    <span class="nav-space">|</span>
+                </ng-container>
+                <li class="nav-item">
+                    <div class="dropdown al-user-profile">
+                        <a href="#" class="nav-link profile-toggle-link dropdown-toggle" id="user-profile-dd" data-toggle="dropdown">
+                            <i class="fa fa-user-circle"></i>
+                            <!-- <img src="{{ ( 'user' | profilePicture ) }}" class="user-image remove_margin" alt="User Image" /> -->
+                            <span class="hidden_sm_xs user-color" id="displayUserName">{{name}}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdownCSS">
+                            <li class="user-footer">
+                                <div class="pull-right">
+                                    <a (click)="signOut()" id="logout" class="btn btn-default btn-flat"> Logout </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+            </ul>
+        </div>
+    </nav>
+</div>

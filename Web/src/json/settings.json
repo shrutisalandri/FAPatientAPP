@@ -1,0 +1,6 @@
+{
+  "baseLocalUrl": "http://localhost:4205/",
+  "baseApiUrl2": "http://40.76.6.182/api/",
+  "baseApiUrl1": "http://40.121.208.253/api/",
+  "baseApiUrl": "http://40.121.208.253/api/"
+}
