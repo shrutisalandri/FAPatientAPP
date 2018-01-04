@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace BusinessServices.Interfaces
 {
-    public interface IService
+    public interface IPatientService
     {
         List<CommonPatient> GetPatients();
 
