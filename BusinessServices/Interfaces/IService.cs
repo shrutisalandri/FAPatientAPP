@@ -1,5 +1,6 @@
 ﻿using BusinessModels.Abstracts;
 using BusinessModels.DTOS;
+using System;
 using System.Collections.Generic;
 
 namespace BusinessServices.Interfaces
@@ -14,7 +15,7 @@ namespace BusinessServices.Interfaces
 
         bool UpdatePatient(CommonPatient patient);
 
-        List<CommonAppointment> GetAppointments();
+        List<CommonAppointment> GetAppointments(DateTime startDate, DateTime endDate);
 
         CommonAppointment GetAppointment(int appointmentId);
     }

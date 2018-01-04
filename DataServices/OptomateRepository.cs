@@ -1,11 +1,12 @@
 ﻿using DataServices.Interfaces;
 using System;
 using System.Collections.Generic;
-using BusinessModels.Abstracts;
 using BusinessModels.DTOS;
 using BusinessModels;
 using Shared.Core;
 using System.Data.Odbc;
+using Dapper;
+using System.Linq;
 
 namespace DataServices
 {
@@ -14,10 +15,9 @@ namespace DataServices
         readonly string _connString;
         readonly int _retries = 0;
         readonly int _commandTimeout = 0;
-        public const string OptomatePremier = "optomatepremier";
-        public const string SetPassWordQuery = "SET PASSWORDS ADD '6!6@6#5$3%9' ; ";
-        public const string DBTimeFormat = "hh:mm tt";
-        public const string OptomatePremierTabName = "Optomate Premier";
+
+        public const string SetPassWordQuery = "SET PASSWORDS ADD '6!6@6#5$3%9' ;";
+
 
         public const int InsertIntoAppNexusMaxAttempts = 3;
 
@@ -29,28 +29,27 @@ namespace DataServices
 
 
 
-        public const string InsertPatientWithBranches = @"INSERT INTO CLIENT
-                                                           (NUMBER,GIVEN,SURNAME,ADDRESS1,SUBURB,STATE,POSTCODE,PHONE_AH,PHONE_MOB,EMAIL,BIRTHDATE,BRANCH) 
-                                                            VALUES(?Number?, ?Given?, ?Surname?, ?Address1?, ?Suburb?, ?State?, ?Postcode?, ?Phone_Ah?, ?Phone_Mob?, ?Email?, ?BirthDate?, ?Branch? );";
 
-        public const string InsertPatientSingleBranch = @"INSERT INTO CLIENT
-                                                           (NUMBER,GIVEN,SURNAME,ADDRESS1,SUBURB,STATE,POSTCODE,PHONE_AH,PHONE_MOB,EMAIL,BIRTHDATE) 
-                                                              VALUES(?Number?, ?Given?, ?Surname?, ?Address1?, ?Suburb?, ?State?, ?Postcode?, ?Phone_Ah?, ?Phone_Mob?, ?Email?, ?BirthDate? );";
+        public const string InsertPatientQuery = @"INSERT INTO CLIENT (NUMBER,GIVEN,SURNAME,ADDRESS1,SUBURB,STATE,POSTCODE,PHONE_AH,PHONE_MOB,EMAIL,BIRTHDATE) 
+                                                   VALUES(?Number?, ?Given?, ?Surname?, ?Address1?, ?Suburb?, ?State?, ?Postcode?, ?Phone_Ah?, ?Phone_Mob?, ?Email?, ?BirthDate? );";
 
 
 
-        public const string SelectBookingsBetweenDates = @"select ID,""start"",""finish"",caption,location,message,clientnum,branch,resourceId,smsconfirm,sentsms,apptype,syncId 
-                                                           from ""APPNEXUS"" where cast(""start"" as date) >=CAST(?start? AS DATE) and cast(""finish"" as date) <=CAST(?finish? AS DATE) and resourceid= ?resourceId?";
+        public const string GetBookingsQuery = @"SELECT ID,""start"",""finish"",caption,location,message,clientnum,branch,resourceId,smsconfirm,sentsms,apptype,syncId 
+                                                 from ""APPNEXUS"" where cast(""start"" as date) >=CAST(?start? AS DATE) and cast(""finish"" as date) <=CAST(?finish? AS DATE)";
+        public const string GetBookingQuery = @"SELECT ID,""start"",""finish"",caption,location,message,clientnum,branch,resourceId,smsconfirm,sentsms,apptype,syncId 
+                                                 from ""APPNEXUS"" where ?bookingId?";
 
-        public const string SelectBookingsBetweenDatesForMulti = @"select ID,""start"",""finish"",caption,location,message,clientnum,branch,resourceId,smsconfirm,sentsms,apptype,syncId 
-                                                           from ""APPNEXUS"" where cast(""start"" as date) >=CAST(?start? AS DATE) and cast(""finish"" as date) <=CAST(?finish? AS DATE) and resourceid= ?resourceId? and branch =?branchCode?";
 
+        public const string GetPatientQuery = @"SELECT Number,Title,Given,Surname,Address1,Suburb,State,Postcode,Phone_Ah,Phone_Mob,Email,BirthDate,Comment,Optom from CLIENT 
+                                                WHERE Given =?patientId?";
 
-        public const string SelectPatientByNameAndDob = @"select Number,Title,Given,Surname,Address1,Suburb,State,Postcode,Phone_Ah,Phone_Mob,Email,BirthDate,Comment,Optom from CLIENT where Given =?firstName? and Surname=?lastname? and BirthDate= CAST(?dob? AS DATE) ";
+        public const string GetPatientsQuery = @"select Number,Title,Given,Surname,Address1,Suburb,State,Postcode,Phone_Ah,Phone_Mob,Email,BirthDate,Comment,Optom from CLIENT 
+           ";
 
         public const string SelectClientNextId = @"SELECT COALESCE(LASTPATNUM,0)+1 FROM GenerateNumbers ";
 
-        public const string SetClientNextId = @"UPDATE GenerateNumbers SET LASTPATNUM = ?nextClientId?";
+        public const string SetClientNextIdQuery = @"UPDATE GenerateNumbers SET LASTPATNUM = ?nextClientId?";
 
         public const string SelectClientCount = @"SELECT count(number) from Client WHERE number = ?nextClientId?;";
 
@@ -65,6 +64,11 @@ namespace DataServices
 
                 return conn.ExecuteRobust(sqlWithTimeout, sqlParams);
             }
+        }
+
+        public OptomateRepository(string ConnectionString)
+        {
+            _connString = ConnectionString;
         }
 
         IEnumerable<T> QueryConn<T>(string sql, object sqlParams = null) where T : class
@@ -82,141 +86,263 @@ namespace DataServices
 
         public CommonAppointment GetAppointment(int appointmentId)
         {
-            throw new NotImplementedException();
+            var sqlParams = new
+            {
+                appointmentId = appointmentId
+            };
+
+            return ToCommonAppointment(QueryConn<OptomateAppointment>(GetBookingQuery, sqlParams).FirstOrDefault());
         }
 
-        public List<CommonAppointment> GetAppointments()
+        public List<CommonAppointment> GetAppointments(DateTime startDate, DateTime endDate)
         {
-            var sql = SelectBookingsBetweenDates;
-            //var sqlParams = new
-            //{
-            //    start = DateUtils.ToYYYY_MM_DD(startTime),
-            //    finish = DateUtils.ToYYYY_MM_DD(endTime),
-            //    resourceId = resourceCode,
-            //    waitseen = _config.CancelStatusID
 
-            //});
+            var sqlParams = new
+            {
+                start = DateUtils.ToYYYY_MM_DD(startDate),
+                finish = DateUtils.ToYYYY_MM_DD(endDate)
+            };
 
-            //if (_config.AllowBookingOverCancelledBooking) ////Get appointments excluding cancelled states.
-            //{
-            //    var sqlToGetCancelledStateAppoitnments = "  AND coalesce(waitseen,0) <> ?waitseen?";
-            //    sql = $"{sql}{sqlToGetCancelledStateAppoitnments}";
+            return ToCommonAppointments(QueryConn<OptomateAppointment>(GetBookingsQuery, sqlParams));
 
-            //    sqlParams.AddDynamicParams(new { waitseen = _config.CancelStatusID });
-            //    return QueryConn<OptomateBooking>(sql, sqlParams);
-            //}
-            //else ////Get all appointments.
-            //{
-            //    return QueryConn<OptomateBooking>(sql, sqlParams);
-            //}
-
-            return null;
         }
 
         public CommonPatient GetPatient(int patientId)
         {
-            //var sqlParams = new DynamicParameters(
-            //  new
-            //  {
-            //      patientId = patientId,
-
-            //  });
-            //return QueryConn<OptomatePatient>($"{SetPassWordQuery} {SelectPatientByNameAndDob}", sqlParams);
-
-            return null;
-
+            var sqlParams = new DynamicParameters(new { patientId = patientId });
+            return ToCommonPatient(QueryConn<OptomatePatient>($"{SetPassWordQuery} {GetPatientQuery}",
+                sqlParams).FirstOrDefault());
         }
 
         public List<CommonPatient> GetPatients()
         {
-            throw new NotImplementedException();
+            return ToCommonPatients(QueryConn<OptomatePatient>($"{SetPassWordQuery} {GetPatientsQuery}"));
         }
 
         public int InsertPatient(CommonPatient patient, string locationCode)
         {
-            OptomatePatient OptomatePatientObj = new OptomatePatient();
-            //bool UseBranches = false;
-            //bool success = false;
-            //int nextId = 0;
-            //int rowsrfected = 0;
-            //for (int i = 1; i <= Constants.InsertIntoAppNexusMaxAttempts; i++)
-            //{
-            //    if (!success)
-            //    {
-            //        nextId = GetClientNextId();
-            //        if (nextId <= 0)
-            //        {
-            //            continue;
-            //        }
-            //        int numOfRecordsWithId = GetClientCount(nextId);
-            //        while (numOfRecordsWithId > 0)
-            //        {
-            //            nextId = nextId + 1;
-            //            numOfRecordsWithId = GetClientCount(nextId);
-            //        }
-            //        var nextIdSet = SetClientNextId(nextId);
-            //        if (!nextIdSet)
-            //        {
-            //            continue;
-            //        }
+            OptomatePatient patient = new OptomatePatient();
 
-            //        string enterPrise = SelectEnterPrise();
-            //        if (!string.IsNullOrEmpty(enterPrise) && enterPrise.ToUpper() == "TRUE")
-            //        {
-            //            UseBranches = true;
-            //        }
-            //        if (UseBranches)
-            //        {
-            //            OptomatePatientObj = new Models.OptomatePatient
-            //            {
-            //                Number = nextId,
-            //                Given = patient.Firstname,
-            //                Surname = patient.Surname,
-            //                Address1 = patient.Address1,
-            //                Suburb = patient.City,
-            //                State = patient.State,
-            //                Postcode = patient.Postcode,
-            //                Phone_Ah = patient.HomePhone,
-            //                Phone_Mob = patient.Phone,
-            //                Email = patient.Email,
-            //                BirthDate = patient.DOB,
-            //                Branch = "" //TODO: Need to confirm on this.
-            //            };
+            bool success = false;
+            int nextId = 0;
+            int rowsrfected = 0;
+            for (int i = 1; i <= InsertIntoAppNexusMaxAttempts; i++)
+            {
+                if (!success)
+                {
+                    nextId = GetClientNextId();
+                    if (nextId <= 0)
+                    {
+                        continue;
+                    }
+                    int numOfRecordsWithId = GetClientCount(nextId);
+                    while (numOfRecordsWithId > 0)
+                    {
+                        nextId = nextId + 1;
+                        numOfRecordsWithId = GetClientCount(nextId);
+                    }
+                    var nextIdSet = SetClientNextId(nextId);
+                    if (!nextIdSet)
+                    {
+                        continue;
+                    }
 
-            //            rowsrfected = ExecConn($"{Constants.SetPassWordQuery} {Constants.InsertPatientWithBranches}", OptomatePatientObj);
-            //        }
-            //        else
-            //        {
-            //            OptomatePatientObj = new Models.OptomatePatient
-            //            {
-            //                Number = nextId,
-            //                Given = patient.Firstname,
-            //                Surname = patient.Surname,
-            //                Address1 = patient.Address1,
-            //                Suburb = patient.City,
-            //                State = patient.State,
-            //                Postcode = patient.Postcode,
-            //                Phone_Ah = patient.Phone,
-            //                Phone_Mob = patient.HomePhone,
-            //                Email = patient.Email,
-            //                BirthDate = patient.DOB,
-            //                Comment = patient.BookingNotes,
-            //            };
 
-            //            rowsrfected = ExecConn($"{Constants.SetPassWordQuery} {Constants.InsertPatientSingleBranch}", OptomatePatientObj);
-            //        }
-            //        if (rowsrfected > 0)
-            //            success = true;
-            //    }
-            //}
 
-            return OptomatePatientObj.Number;
+                    patient = new Models.OptomatePatient
+                    {
+                        Number = nextId,
+                        Given = patient.Firstname,
+                        Surname = patient.Surname,
+                        Address1 = patient.Address1,
+                        Suburb = patient.City,
+                        State = patient.State,
+                        Postcode = patient.Postcode,
+                        Phone_Ah = patient.Phone,
+                        Phone_Mob = patient.HomePhone,
+                        Email = patient.Email,
+                        BirthDate = patient.DOB,
+                        Comment = patient.BookingNotes,
+                    };
+
+                    rowsrfected = ExecConn($"{SetPassWordQuery} {InsertPatientSingleBranch}", patient);
+
+                    if (rowsrfected > 0)
+                        success = true;
+                }
+            }
+
+            return patient.Number;
 
         }
 
         public bool UpdatePatient(CommonPatient patient)
         {
             throw new NotImplementedException();
+        }
+
+        private int GetAppointmentNextId()
+        {
+            try
+            {
+                int result = 0;
+                string maxCode = QueryConn<string>(SelectAppointmentNextId)?.FirstOrDefault();
+                Int32.TryParse(maxCode, out result);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        private int GetAppointmentNexusCount(int Id)
+        {
+            try
+            {
+                var sqlParams = new DynamicParameters(
+                    new
+                    {
+                        nextId = Id,
+                    });
+                int result = 0;
+                string maxCode = QueryConn<string>(SelectAppointmentNexusCount, sqlParams)?.FirstOrDefault();
+                Int32.TryParse(maxCode, out result);
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        private int GetClientNextId()
+        {
+            int result = 0;
+            string maxCode = QueryConn<string>(SelectClientNextId)?.FirstOrDefault();
+            Int32.TryParse(maxCode, out result);
+            return result;
+
+        }
+        private int GetClientCount(int nextClientId)
+        {
+
+            var sqlParams = new DynamicParameters(
+                new
+                {
+                    nextClientId = nextClientId
+                });
+
+            int result = 0;
+            string maxCode = QueryConn<string>($"{SetPassWordQuery} {SelectClientCount}", sqlParams)?.FirstOrDefault();
+            Int32.TryParse(maxCode, out result);
+            return result;
+
+        }
+
+        private bool SetClientNextId(int nextClientId)
+        {
+
+            var sqlParams = new DynamicParameters(
+                new
+                {
+                    nextClientId = nextClientId
+                });
+            var rowsrfected = ExecConn(SetClientNextIdQuery, sqlParams);
+            if (rowsrfected > 0)
+                return true;
+            return false;
+
+
+        }
+        private bool SetAppointmentNextId(int Id)
+        {
+            var sqlParams = new DynamicParameters(
+                new
+                {
+                    nextId = Id,
+                });
+            var rowsrfected = ExecConn(SetNextAppointmentNextId, sqlParams);
+            if (rowsrfected > 0)
+                return true;
+            return false;
+
+        }
+
+
+
+
+        private List<CommonPatient> ToCommonPatients(IEnumerable<OptomatePatient> optomateTouchPatients)
+        {
+            List<CommonPatient> commonPatients = new List<CommonPatient>();
+
+            foreach (OptomatePatient op in optomateTouchPatients)
+            {
+                commonPatients.Add(ToCommonPatient(op));
+            }
+
+            return commonPatients;
+        }
+
+        private List<CommonAppointment> ToCommonAppointments(IEnumerable<OptomateAppointment> optomateTouchAppointments)
+        {
+            List<CommonAppointment> commonAppointments = new List<CommonAppointment>();
+
+            foreach (OptomateAppointment ota in optomateTouchAppointments)
+            {
+                commonAppointments.Add(ToCommonAppointment(ota));
+            }
+
+            return commonAppointments;
+        }
+
+        private CommonPatient ToCommonPatient(OptomatePatient optomatePatient)
+        {
+            return new CommonPatient()
+            {
+                Title = optomatePatient.Title,
+                FirstName = optomatePatient.Given,
+                LastName = optomatePatient.Surname,
+                DateOfBirth = optomatePatient.BirthDate,
+                //Gender = optomatePatient.,
+                Mobile = optomatePatient.Mobile,
+                Email = optomatePatient.Email,
+                //Phone = optomatePatient.Phone,
+                ResidentialAddress = optomatePatient.Address1,
+                ResidentialSuburb = optomatePatient.Suburb,
+                ResidentialPostCode = optomatePatient.State,
+                ResidentialState = optomatePatient.Postcode,
+
+                //PostAddressSameAsResidentialAddress = optomatePatient.Title,
+                //PostalAddress = optomatePatient.Title,
+                //PostalSuburb = optomatePatient.Title,
+                //PostalPostCode = optomatePatient.Title,
+                //PostalState = optomatePatient.Title,
+
+                //HealthFundName = optomatePatient.HealthFundName,
+                //HealthFundMemberNumber = optomatePatient.HealthFundMemberNumber,
+                //HeatlhFundRefreenceNumber = optomatePatient.HeatlhFundRefreenceNumber,
+                //MedicareMemberNumber = optomatePatient.MedicareMemberNumber,
+
+                //HasHealthFund = optomatePatient.HasHealthFund,
+                //MeidcareReferenceNumber = optomatePatient.MeidcareReferenceNumber,
+                //MedicareExpiryDate = optomatePatient.MedicareExpiryDate,
+                //DVAPensionNumber = optomatePatient.DVAPensionNumber
+            };
+
+        }
+
+        private CommonAppointment ToCommonAppointment(OptomateAppointment optomateAppointment)
+        {
+            return new CommonAppointment()
+            {
+                StartDate = optomateAppointment.Start,
+                ID = optomateAppointment.Id,
+                EndDate = optomateAppointment.Finish,
+                BranchIdentifier = optomateAppointment.Branch,
+                //UserIdentifier = optomateAppointment.UserIdentifier,
+                AppointmentType = optomateAppointment.Appttype,
+                PatientId = optomateAppointment.ClientNum,
+                //Duration = optomateAppointment.Duration,
+            };
         }
 
     }

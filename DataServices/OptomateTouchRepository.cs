@@ -117,8 +117,10 @@ namespace DataServices
             throw new NotImplementedException();
         }
 
-        public List<CommonAppointment> GetAppointments()
+        public List<CommonAppointment> GetAppointments(DateTime startDate, DateTime endDate)
         {
+            //need to startDate, endDate in query
+
             return ToCommonAppointments(QueryConn<OptomateTouchAppointment>($"{GetAppointmentsQuery}"));
         }
 

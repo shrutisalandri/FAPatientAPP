@@ -2,6 +2,7 @@
 using BusinessModels.Abstracts;
 using DataServices.Interfaces;
 using BusinessModels.DTOS;
+using System;
 
 namespace BusinessServices.Interfaces
 {
@@ -19,9 +20,9 @@ namespace BusinessServices.Interfaces
             return _repo.GetAppointment(appointmentId);
         }
 
-        public List<CommonAppointment> GetAppointments()
+        public List<CommonAppointment> GetAppointments(DateTime startDate, DateTime endDate)
         {
-            return _repo.GetAppointments();
+            return _repo.GetAppointments(startDate, endDate);
         }
 
         public CommonPatient GetPatient(int patientId)

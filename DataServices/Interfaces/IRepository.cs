@@ -14,14 +14,14 @@ namespace DataServices.Interfaces
         List<CommonPatient> GetPatients();
 
         CommonPatient GetPatient(int PatientId);
-       
+
         int InsertPatient(CommonPatient patient, string locationCode);
-       
+
         bool UpdatePatient(CommonPatient patient);
 
-        List<CommonAppointment> GetAppointments();
+        List<CommonAppointment> GetAppointments(DateTime startDate, DateTime endDate);
 
         CommonAppointment GetAppointment(int appointmentId);
-      
+
     }
 }
