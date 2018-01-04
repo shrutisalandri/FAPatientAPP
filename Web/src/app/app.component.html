@@ -2,16 +2,15 @@
 <div [ngClass]="{'menu-collapsed': isMenuCollapsed}" baThemeRun>
     <div class="additional-bg"></div>
     <div>
-        <app-page-top *ngIf="currentUser != null"></app-page-top>
-        <div [class.al-main]="currentUser != null">
-            <div [class.al-content]="currentUser != null">
-                <section class="content container-fluid" [class.top-padding]="currentUser != null">
+        <div [class.al-main]="true">
+            <div [class.al-content]="currentUser == null">
+                <section class="content container-fluid" [class.top-padding]="currentUser == null">
                     <router-outlet></router-outlet>
                 </section>
             </div>
         </div>
-        <app-back-top position="200" *ngIf="currentUser != null"></app-back-top>
-        <footer class="main-footer calibriFont14" *ngIf="currentUser != null">
+        <app-back-top position="200" ></app-back-top>
+        <footer class="main-footer calibriFont14">
             <div class="pull-left">
                 <em>Extract Systems</em>
             </div>

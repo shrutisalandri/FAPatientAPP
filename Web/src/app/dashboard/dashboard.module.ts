@@ -20,6 +20,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { routing } from './dashboard.routing';
 import { NgaModule } from '../layout/nga.module';
+import { PatientComponent } from '../Patient';
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { NgaModule } from '../layout/nga.module';
   ],
   declarations: [
     Dashboard,
+    PatientComponent
   ],
   providers: [
     DashBoardService

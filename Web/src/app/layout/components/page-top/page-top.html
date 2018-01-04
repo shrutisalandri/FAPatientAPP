@@ -13,12 +13,12 @@
             <ul class="navbar-nav mx-auto"></ul>
             <ul class="navbar-nav pull-sm-right">
                 <li class="nav-item  mt-1 mb-1 mr-2">
-                    <p-dropdown *ngIf="userDetails.roleName==role[role.Admin]" [options]="customers" [(ngModel)]="selectedCustomer" placeholder="--customer--" scrollHeight="200px" #customer (onChange)="onCustomerChange($event, customer.value)" data-toggle="tooltip" data-placement="left"
+                    <p-dropdown  [options]="customers" [(ngModel)]="selectedCustomer" placeholder="--customer--" scrollHeight="200px" #customer (onChange)="onCustomerChange($event, customer.value)" data-toggle="tooltip" data-placement="left"
                                 title="Customer"></p-dropdown>
-                    <label class="mt-1" *ngIf="userDetails.roleName==role[role.Customer]">{{loggedinCustomer.text}}</label>
+                    <label class="mt-1" >{{loggedinCustomer.text}}</label>
                 </li>
                 <li class="nav-item  mt-1 mb-1">
-                    <p-dropdown [options]="clients" [disabled]="clients.length ==0 " [(ngModel)]="selectedClient" placeholder="--client--" scrollHeight="200px" #client (onChange)="onClientChange($event,client.value)" data-toggle="tooltip" data-placement="right"
+                    <p-dropdown [options]="clients" [(ngModel)]="selectedClient" placeholder="--client--" scrollHeight="200px" #client (onChange)="onClientChange($event,client.value)" data-toggle="tooltip" data-placement="right"
                                 title="Client"></p-dropdown>
                 </li>
                 <span class="nav-space">|</span>

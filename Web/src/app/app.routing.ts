@@ -5,24 +5,24 @@ import { CustomerGuardService } from './shared/services/customer-gaurd.service';
 
 export const routes: Routes = [
 
+  //{
+  //  path: '',
+  //  redirectTo: 'account',
+  //  pathMatch: 'full'
+  //},
+  //{
+  //    path: 'account',
+  //    loadChildren: 'app/account/account.module#AccountModule'
+  //},
+  //{
+  //  path: 'error',
+  //  component: ErrorPageComponent,
+  //  data: { animation: 'error' }
+  //},
   {
     path: '',
-    redirectTo: 'account',
-    pathMatch: 'full'
-  },
-  {
-      path: 'account',
-      loadChildren: 'app/account/account.module#AccountModule'
-  },
-  {
-    path: 'error',
-    component: ErrorPageComponent,
-    data: { animation: 'error' }
-  },
-  {
-    path: 'dashboard',
     loadChildren: 'app/dashboard/dashboard.module#DashboardModule',
-    canActivate: [AuthGuardService],
+    //canActivate: [AuthGuardService],
   },
   
   { path: '**', redirectTo: 'error' }

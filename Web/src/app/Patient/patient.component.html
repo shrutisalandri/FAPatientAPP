@@ -1,0 +1,265 @@
+<div  class="inner-container">
+  <div class="row small-12 columns">
+
+    <h4 class="card-title"> Enter Patient Details page</h4>
+  </div>
+  <div class="row form-group">
+    <div class="small-12 columns">
+      <a [routerLink]="'/'" class="link style-text-small style-text-light">
+        Back
+      </a>
+    </div>
+  </div>
+
+  <div @fadeInAnimation class="row form-group">
+    <div class="fade-anim small-12 columns" style="width:-webkit-fill-available;    padding: 5px 50px 5px;">
+      <div class="card text-center">
+        <div class="card-header">
+          Your Peronsonal Details
+        </div>
+        <div class="card-block">
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">Title:</label>
+            </div>
+            <div class="col-md-4">
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.title" />
+            </div>
+          </div>
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">First Name:</label>
+            </div>
+            <div class="col-md-4">
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.FirstName" />
+            </div>
+          </div>
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">
+                Last Name:
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.LastName" />
+            </div>
+          </div>
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">Date of Birth:</label>
+            </div>
+            <div class="col-md-1">
+              <p-calendar [(ngModel)]="patientDetails.DOB"></p-calendar>
+            </div>
+          </div>
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">Gender:</label>
+            </div>
+            <div class="col-md-1">
+              <input type="radio" name="gender" value='Male' [(ngModel)]="patientDetails.Gender">Male
+              <input type="radio" name='gender' value='Female' [(ngModel)]="patientDetails.Gender">Female
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fade-anim small-12 columns" style="width:-webkit-fill-available;    padding: 5px 50px 5px;">
+      <div class="card text-center">
+        <div class="card-header">
+          Your Contact Details
+        </div>
+        <div class="card-block">
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">Mobile:</label>
+            </div>
+            <div class="col-md-4">
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.mobile" />
+            </div>
+          </div>
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">Email:</label>
+            </div>
+            <div class="col-md-4">
+              <input autocomplete="off" class="form-control" type="email" [(ngModel)]="patientDetails.Email" />
+            </div>
+          </div>
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">Phone:</label>
+            </div>
+            <div class="col-md-4">
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.Phone" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fade-anim small-12 columns" style="width:-webkit-fill-available;    padding: 5px 50px 5px;">
+      <div class="card text-center">
+        <div class="card-header">Your Address</div>
+        <div class="card-block">
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">Residential Address</label>
+            </div>
+            <div class="col-md-4">
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.ResidentialAddress.Address" />
+            </div>
+          </div>
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">Residential Suburb</label>
+            </div>
+            <div class="col-md-4">
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.ResidentialAddress.Suburb" />
+            </div>
+          </div>
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">Residential Postcode</label>
+            </div>
+            <div class="col-md-4">
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.ResidentialAddress.Postcode" />
+            </div>
+          </div>
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">Residential State</label>
+            </div>
+            <div class="col-md-4">
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.ResidentialAddress.State" />
+            </div>
+          </div>
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">Is your Postal Address same as Residential?</label>
+            </div>
+            <div class="col-md-4" style="text-align: left;">
+              <input type="checkbox" [(ngModel)]="patientDetails.PostAddressSameAsResidentialAddress" style="height:20px">
+              <!--<p-inputSwitch [(ngModel)]="checked"></p-inputSwitch>-->
+            </div>
+          </div>
+          <div *ngIf="!patientDetails.PostAddressSameAsResidentialAddress">
+            <div class="row form-group" style="padding-top:5px">
+              <div class="col-md-4">
+                <label class="small-2 columns label-text">Postal Address</label>
+              </div>
+              <div class="col-md-4">
+                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.PostalAddress.Address" />
+              </div>
+            </div>
+            <div class="row form-group" style="padding-top:5px">
+              <div class="col-md-4">
+                <label class="small-2 columns label-text">Postal Suburb</label>
+              </div>
+              <div class="col-md-4">
+                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.PostalAddress.Suburb" />
+              </div>
+            </div>
+            <div class="row form-group" style="padding-top:5px">
+              <div class="col-md-4">
+                <label class="small-2 columns label-text">Postal Postcode</label>
+              </div>
+              <div class="col-md-4">
+                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.PostalAddress.Postcode" />
+              </div>
+            </div>
+            <div class="row form-group" style="padding-top:5px">
+              <div class="col-md-4">
+                <label class="small-2 columns label-text">Postal State</label>
+              </div>
+              <div class="col-md-4">
+                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.PostalAddress.State" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fade-anim small-12 columns" style="width:-webkit-fill-available;    padding: 5px 50px 5px;">
+      <div class="card text-center">
+        <div class="card-header">
+          Your Health Fund Details
+        </div>
+        <div class="card-block">
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">
+                Are you in a Private Health Fund
+              </label>
+            </div>
+            <div class="col-md-4" style="text-align:left">
+              <input type="checkbox" [(ngModel)]="patientDetails.HasHealthFund" style="height:20px">
+            </div>
+          </div>
+          <div *ngIf="!patientDetails.HasHealthFund">
+            <div class="row form-group" style="padding-top:5px">
+              <div class="col-md-4">
+                <label class="small-2 columns label-text">Private Health Fund Name:</label>
+              </div>
+              <div class="col-md-4">
+                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.PrivateHealthFund.FundName" />
+              </div>
+            </div>
+            <div class="row form-group" style="padding-top:5px">
+              <div class="col-md-4">
+                <label class="small-2 columns label-text">Private Health Fund Member Number:</label>
+              </div>
+              <div class="col-md-4">
+                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.PrivateHealthFund.FundMemberNumber" />
+              </div>
+            </div>
+            <div class="row form-group" style="padding-top:5px">
+              <div class="col-md-4">
+                <label class="small-2 columns label-text">Private Heatlh Fund Refreence Number:</label>
+              </div>
+              <div class="col-md-4">
+                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.PrivateHealthFund.FundRefreenceNumber" />
+              </div>
+            </div>
+
+          </div>
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">Medicare Member Number:</label>
+            </div>
+            <div class="col-md-4">
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.MedicareMemberNumber" />
+            </div>
+          </div>
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">Meidcare Reference Number:</label>
+            </div>
+            <div class="col-md-4">
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.MeidcareReferenceNumber" />
+            </div>
+          </div>
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">Medicare Expiry Date:</label>
+            </div>
+            <div class="col-md-1">
+              <p-calendar [(ngModel)]="patientDetails.MedicareExpiryDate"></p-calendar>
+            </div>
+          </div>
+          <div class="row form-group" style="padding-top:5px">
+            <div class="col-md-4">
+              <label class="small-2 columns label-text">DVA Pension Number:</label>
+            </div>
+            <div class="col-md-4">
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.DVAPensionNumber" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class=" small-12 columns" style="width:-webkit-fill-available;text-align:center ; padding: 5px 50px 5px;">
+      <button type="button" class="button btn-primary btn-radius" (click)="SubmitPatient()">submit</button>
+    </div>
+    </div>
+  </div>

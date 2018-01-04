@@ -21,6 +21,7 @@ import { NgaModule } from './layout/nga.module';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
+import { RadioButtonModule, CalendarModule, InputSwitchModule, CheckboxModule} from 'primeng/primeng';
 import {
     AuthenticationService,
     UserService,
@@ -60,7 +61,12 @@ export function sessionResolveFactory() {
         FormsModule,
         ReactiveFormsModule,
         NgaModule.forRoot(),
-        routing
+      routing,
+      RadioButtonModule,
+      CalendarModule,
+      InputSwitchModule,
+      CheckboxModule
+      
     ],
     providers: [
         GlobalState,
