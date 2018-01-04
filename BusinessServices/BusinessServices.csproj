@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IService.cs" />
-    <Compile Include="Interfaces\PatientService.cs" />
+    <Compile Include="PatientService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

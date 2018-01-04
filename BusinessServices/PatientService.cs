@@ -3,10 +3,11 @@ using BusinessModels.Abstracts;
 using DataServices.Interfaces;
 using BusinessModels.DTOS;
 using System;
+using BusinessServices.Interfaces;
 
-namespace BusinessServices.Interfaces
+namespace BusinessServices
 {
-    public class PatientService : IService
+    public class PatientService : IPatientService
     {
         private IRepository _repo;
 

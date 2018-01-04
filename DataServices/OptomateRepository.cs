@@ -121,7 +121,6 @@ namespace DataServices
 
         public int InsertPatient(CommonPatient patient, string locationCode)
         {
-            OptomatePatient patient = new OptomatePatient();
 
             bool success = false;
             int nextId = 0;
@@ -147,32 +146,31 @@ namespace DataServices
                         continue;
                     }
 
-
-
-                    patient = new Models.OptomatePatient
+                    OptomatePatient newPatient = new OptomatePatient()
                     {
                         Number = nextId,
-                        Given = patient.Firstname,
-                        Surname = patient.Surname,
-                        Address1 = patient.Address1,
-                        Suburb = patient.City,
-                        State = patient.State,
-                        Postcode = patient.Postcode,
+                        Given = patient.FirstName,
+                        Surname = patient.LastName,
+                        Address1 = patient.ResidentialAddress,
+                        Suburb = patient.ResidentialSuburb,
+                        State = patient.ResidentialState,
+                        Postcode = patient.ResidentialPostCode,
                         Phone_Ah = patient.Phone,
-                        Phone_Mob = patient.HomePhone,
+                        Phone_Mob = patient.Mobile,
                         Email = patient.Email,
-                        BirthDate = patient.DOB,
-                        Comment = patient.BookingNotes,
+                        BirthDate = patient.DateOfBirth,
+
                     };
 
-                    rowsrfected = ExecConn($"{SetPassWordQuery} {InsertPatientSingleBranch}", patient);
+                    rowsrfected = ExecConn($"{SetPassWordQuery} {InsertPatientQuery}", patient);
 
                     if (rowsrfected > 0)
                         success = true;
                 }
             }
 
-            return patient.Number;
+            //ToDo : Implement patient id value return
+            return 0;
 
         }
 
@@ -199,11 +197,8 @@ namespace DataServices
         {
             try
             {
-                var sqlParams = new DynamicParameters(
-                    new
-                    {
-                        nextId = Id,
-                    });
+                var sqlParams = new { nextId = Id };
+
                 int result = 0;
                 string maxCode = QueryConn<string>(SelectAppointmentNexusCount, sqlParams)?.FirstOrDefault();
                 Int32.TryParse(maxCode, out result);
@@ -222,48 +217,30 @@ namespace DataServices
             return result;
 
         }
+
         private int GetClientCount(int nextClientId)
         {
-
-            var sqlParams = new DynamicParameters(
-                new
-                {
-                    nextClientId = nextClientId
-                });
+            var sqlParams = new { nextClientId = nextClientId };
 
             int result = 0;
             string maxCode = QueryConn<string>($"{SetPassWordQuery} {SelectClientCount}", sqlParams)?.FirstOrDefault();
             Int32.TryParse(maxCode, out result);
             return result;
-
         }
 
         private bool SetClientNextId(int nextClientId)
         {
+            var sqlParams = new { nextClientId = nextClientId };
 
-            var sqlParams = new DynamicParameters(
-                new
-                {
-                    nextClientId = nextClientId
-                });
-            var rowsrfected = ExecConn(SetClientNextIdQuery, sqlParams);
-            if (rowsrfected > 0)
-                return true;
-            return false;
-
+            return ExecConn(SetClientNextIdQuery, sqlParams) > 0;
 
         }
+
         private bool SetAppointmentNextId(int Id)
         {
-            var sqlParams = new DynamicParameters(
-                new
-                {
-                    nextId = Id,
-                });
-            var rowsrfected = ExecConn(SetNextAppointmentNextId, sqlParams);
-            if (rowsrfected > 0)
-                return true;
-            return false;
+            var sqlParams = new { nextId = Id };
+
+            return ExecConn(SetNextAppointmentNextId, sqlParams) > 0;
 
         }
 
