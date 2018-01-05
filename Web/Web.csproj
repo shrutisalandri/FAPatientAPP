@@ -106,7 +106,8 @@
     <Content Include="src\app\layout\components\page-top\page-top.html" />
     <Content Include="src\app\layout\components\side-bar\sidebar-search-results.html" />
     <Content Include="src\app\Patient\patient.component.html" />
-    <Content Include="src\app\SearchPatient\searchPatient.html" />
+    <Content Include="src\app\SearchBooking\searchBooking.component.html" />
+    <Content Include="src\app\SearchPatient\searchPatient.component.html" />
     <Content Include="src\assets\fonts\fontawesome-webfont.svg" />
     <Content Include="src\assets\img\app\profile\user.png" />
     <Content Include="src\assets\img\app_logo-1.PNG" />
@@ -165,23 +166,16 @@
     <TypeScriptCompile Include="src\app\Patient\index.ts" />
     <TypeScriptCompile Include="src\app\Patient\patient.component.ts" />
     <TypeScriptCompile Include="src\app\Patient\patient.module.ts" />
+    <TypeScriptCompile Include="src\app\SearchBooking\index.ts" />
+    <TypeScriptCompile Include="src\app\SearchBooking\searchBooking.module.ts" />
+    <TypeScriptCompile Include="src\app\SearchBooking\searchBooking.component.ts" />
+    <TypeScriptCompile Include="src\app\SearchPatient\index.ts" />
+    <TypeScriptCompile Include="src\app\SearchPatient\searchPatient.component.ts" />
     <TypeScriptCompile Include="src\app\SearchPatient\searchPatient.module.ts" />
-    <TypeScriptCompile Include="src\app\SearchPatient\searchPatient.ts" />
     <TypeScriptCompile Include="src\app\shared\Constants\client.constants.ts" />
-    <TypeScriptCompile Include="src\app\shared\models\auth-type.enum.ts" />
-    <TypeScriptCompile Include="src\app\shared\models\index.ts" />
-    <TypeScriptCompile Include="src\app\shared\models\message-type.model.ts" />
-    <TypeScriptCompile Include="src\app\shared\models\message.model.ts" />
     <TypeScriptCompile Include="src\app\shared\models\patient.ts" />
-    <TypeScriptCompile Include="src\app\shared\models\responseModel.ts" />
-    <TypeScriptCompile Include="src\app\shared\models\role.enum.ts" />
-    <TypeScriptCompile Include="src\app\shared\models\user.ts" />
-    <TypeScriptCompile Include="src\app\shared\services\auth-guard.service.ts" />
-    <TypeScriptCompile Include="src\app\shared\services\authentication.service.ts" />
-    <TypeScriptCompile Include="src\app\shared\services\customer-gaurd.service.ts" />
-    <TypeScriptCompile Include="src\app\shared\services\index.ts" />
-    <TypeScriptCompile Include="src\app\shared\services\reset-password.service.ts" />
-    <TypeScriptCompile Include="src\app\shared\services\user.service.ts" />
+    <TypeScriptCompile Include="src\app\shared\models\searchPatient.ts" />
+    <TypeScriptCompile Include="src\app\shared\models\searchBooking.ts" />
     <TypeScriptCompile Include="src\app\shared\utilities\common-utility.service.ts" />
     <TypeScriptCompile Include="src\app\shared\utilities\config.ts" />
     <TypeScriptCompile Include="src\app\shared\utilities\custom-pipes\array-item.pipe.ts" />
@@ -191,7 +185,6 @@
     <TypeScriptCompile Include="src\app\shared\utilities\global-constants\global-constants.ts" />
     <TypeScriptCompile Include="src\app\shared\utilities\global-constants\global-enum.ts" />
     <TypeScriptCompile Include="src\app\shared\utilities\global-events-manager.ts" />
-    <TypeScriptCompile Include="src\app\shared\utilities\http\auth-interceptor.ts" />
     <TypeScriptCompile Include="src\app\shared\utilities\http\http-utility.service.ts" />
     <TypeScriptCompile Include="src\app\shared\validators\email.validator.ts" />
     <TypeScriptCompile Include="src\app\shared\validators\equal-passwords.validator.ts" />
@@ -207,6 +200,7 @@
   <ItemGroup>
     <Folder Include="bin\Release\" />
     <Folder Include="obj\Debug\TempPE\" />
+    <Folder Include="src\app\shared\services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

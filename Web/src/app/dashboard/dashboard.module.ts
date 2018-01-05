@@ -1,3 +1,4 @@
+/// <reference path="../searchpatient/searchpatient.component.ts" />
 import {
   AutoCompleteModule,
   CalendarModule,
@@ -21,6 +22,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { routing } from './dashboard.routing';
 import { NgaModule } from '../layout/nga.module';
 import { PatientComponent } from '../Patient';
+import { SearchPatientComponent } from '../searchpatient';
+import { SearchBookingComponent } from '../searchbooking';
 
 
 @NgModule({
@@ -42,7 +45,9 @@ import { PatientComponent } from '../Patient';
   ],
   declarations: [
     Dashboard,
-    PatientComponent
+    PatientComponent,
+    SearchPatientComponent,
+    SearchBookingComponent
   ],
   providers: [
     DashBoardService

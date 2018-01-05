@@ -1,20 +1,20 @@
-<section class="content top_padding">
-  <div @fadeInAnimation class="row">
+<section class="content top_padding" style="padding-top: inherit;">
+  <div @fadeInAnimation class="row" style="padding-top:10px;text-align: center;">
     <div class=" fade-anim col-md-6 col-sm-12 mb-2">
       <div class="small-12 columns">
-        <button style="width:500px;height:150px" type="button" value="Patients" [routerLink]="['../Patient']" class="btn"> Update Existing Patient Record from Patient Search </button>
+        <button class="bashboardbtn btn" type="button" value="Patients" [routerLink]="['../SearchPatient']" > Update Existing Patient Record from Patient Search </button>
       </div>
     </div>
 
 
     <div class="fade-anim col-md-6 col-sm-12 mb-2">
       <div class="small-12 columns">
-        <button style="width:500px;height:150px" type="button" value="Bookings" [routerLink]="['../Booking']" class="btn"> Update Existing Patient Record from Booking Id </button>
+        <button  class="bashboardbtn btn"  type="button" value="Bookings" [routerLink]="['../Booking']"> Update Existing Patient Record from Booking Id </button>
       </div>
     </div>
     <div class="fade-anim col-md-6 offset-md-3 col-sm-12 mb-2">
       <div class="small-12 columns">
-        <button style="width:500px;height:150px" type="button" value="Patients" [routerLink]="['../Patient']" class="btn">  Create New Patient Record </button>
+        <button  class="bashboardbtn btn"  type="button" value="Patients" [routerLink]="['../Patient']">  Create New Patient Record </button>
       </div>
     </div>
   </div>

@@ -1,4 +1,5 @@
 export class Patient {
+  PatientId: string;
   Title: string;
   FirstName: string;
   LastName: string;

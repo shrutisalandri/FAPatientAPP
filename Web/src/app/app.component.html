@@ -2,25 +2,30 @@
 <div [ngClass]="{'menu-collapsed': isMenuCollapsed}" baThemeRun>
     <div class="additional-bg"></div>
     <div>
-        <div [class.al-main]="true">
-            <div [class.al-content]="currentUser == null">
-                <section class="content container-fluid" [class.top-padding]="currentUser == null">
-                    <router-outlet></router-outlet>
-                </section>
-            </div>
+      <app-page-top ></app-page-top>
+      <div [class.al-main]="true">
+        <div [class.al-content]="currentUser == null">
+          <section class="content container-fluid" [class.top-padding]="currentUser == null">
+            <router-outlet></router-outlet>
+          </section>
         </div>
-        <app-back-top position="200" ></app-back-top>
-        <footer class="main-footer calibriFont14">
-            <div class="pull-left">
-                <em>Extract Systems</em>
-            </div>
-            <div class="pull-right">
-                &copy; 2017
-                <strong>
-            <a id="tenantwebsite" href="http://www.extractsystems.com/" class="tenant-link" target="_blank">ExtractSystems</a>
-        </strong> All Rights Reserved.
-            </div>
-        </footer>
+      </div>
+      <app-back-top position="200"></app-back-top>
+      <footer class="main-footer calibriFont14" style="background-color: #0c1144;height:50px">
+        <div class="column logo-footer">
+          <a routerLink="/" class="al-logo clearfix">
+            <span class="resizelogo">
+              <img src="https://www.myhealth1st.com.au/images/makatea/MyHealth1st-reverse-colour.svg" border="0" alt="API Configuration Tool" title="Extract Systems">
+            </span>
+          </a>
+        </div>
+        <div class="pull-right">
+          &copy; 2017
+          <strong style="color:white">
+            <!--<a id="tenantwebsite" href="http://www.extractsystems.com/" class="tenant-link" target="_blank">Digital ClipBoard</a>-->
+          </strong> All Rights Reserved.
+        </div>
+      </footer>
     </div>
 
 </div>

@@ -1,7 +1,5 @@
 import { ErrorPageComponent } from './layout/components/error-page/error-page.component';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuardService } from "./shared/services/auth-guard.service";
-import { CustomerGuardService } from './shared/services/customer-gaurd.service';
 
 export const routes: Routes = [
 

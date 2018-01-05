@@ -221,9 +221,19 @@ a {
 .breadcrumb-item a{
   color: #fff !important;
 }
-.card-header{
-  background: $theme-color !important;
+.card-header {
+  background: #e0147b !important; //$theme-color !important;
   color: #fff !important;
   font-weight: bold;
   padding: 5px 10px !important;
 }
+.custbtn {
+  background-color: #e0147b;
+  border-radius: 20px;
+  width: 100px;
+  height: 30px;
+  border-color: #e0147b;
+}
+.ui-datatable th.ui-state-default {
+  background: #efd5e1 !important;
+  }

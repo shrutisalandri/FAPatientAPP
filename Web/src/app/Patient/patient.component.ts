@@ -1,6 +1,7 @@
 /// <reference path="../shared/models/patient.ts" />
 import * as _ from 'lodash';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
+
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 
 
@@ -32,14 +33,23 @@ export class PatientComponent implements OnInit {
   
   checked: boolean;
 
-  constructor( ) {    
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+    
     this.patientDetails.ResidentialAddress = new Address();
     this.patientDetails.PostalAddress = new Address();
     this.patientDetails.PrivateHealthFund = new HealthFund();
     this.patientDetails.HasHealthFund = true;
     this.patientDetails.PostAddressSameAsResidentialAddress = true;
   }
-   ngOnInit() {
+  ngOnInit() {
+    var queryParam = this.activatedRoute.snapshot.queryParams["PatientID"];
+
+    if (queryParam != null && queryParam.length > 0) {
+      this.patientDetails.Title = "title";
+      this.patientDetails.FirstName = "FirstName";
+      this.patientDetails.LastName = "LastName";
+    }
+
   }
 
    public SubmitPatient() {

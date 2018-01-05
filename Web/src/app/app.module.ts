@@ -5,7 +5,6 @@ import {
     ErrorHandler,
     NgModule
 } from '@angular/core';
-import { AuthInterceptor } from './shared/utilities/http/auth-interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { Config } from './shared/utilities/config';
@@ -22,14 +21,6 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 import { RadioButtonModule, CalendarModule, InputSwitchModule, CheckboxModule} from 'primeng/primeng';
-import {
-    AuthenticationService,
-    UserService,
-    AuthGuardService,
-    CustomerGuardService
-} from "./shared/services";
-
-import { ResetPasswordService } from './shared/services/reset-password.service';
 
 export function moduleResoveFactory(config: Config) {
     return () => config.load();
@@ -70,11 +61,6 @@ export function sessionResolveFactory() {
     ],
     providers: [
         GlobalState,
-        AuthenticationService,
-        UserService,
-        AuthGuardService,
-        CustomerGuardService,
-        ResetPasswordService,
         { provide: APP_BASE_HREF, useValue: '/' },
         { provide: ErrorHandler, useClass: CustomExceptionHandler },
         GlobalEventsManager,
@@ -89,11 +75,6 @@ export function sessionResolveFactory() {
             provide: APP_INITIALIZER,
             useFactory: moduleResoveFactory,
             deps: [Config],
-            multi: true
-        },
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: AuthInterceptor,
             multi: true
         },
         HttpUtility,

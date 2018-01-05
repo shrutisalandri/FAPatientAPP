@@ -1,10 +1,10 @@
-/// <reference path="searchpatient.component.ts" />
+/// <reference path="searchbooking.component.ts" />
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
-import { SearchPatientComponent } from './searchpatient.component';
+import { SearchBookingComponent } from './searchbooking.component';
 import { DataTableModule, SharedModule } from 'primeng/primeng';
 
 @NgModule({
@@ -19,15 +19,15 @@ import { DataTableModule, SharedModule } from 'primeng/primeng';
   ],
 
   declarations: [
-    SearchPatientComponent
+    SearchBookingComponent
   ],
   providers: [
     
   ],
   exports: [
-    SearchPatientComponent
+    SearchBookingComponent
     ],
 })
-export class SearchPatientModule {
+export class SearchBookingModule {
 
 }

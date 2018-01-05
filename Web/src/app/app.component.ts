@@ -4,8 +4,6 @@ import { GlobalState } from './app.global.state';
 import { layoutPaths } from './layout/theme.constants';
 import { routeAnimation } from './layout/animations/shared-animations';
 import { Router } from '@angular/router';
-import { UserService } from "./shared/services/user.service";
-import { User } from './shared/models';
 import {
   Component,
   NgZone,
@@ -26,8 +24,7 @@ import {
   animations:[routeAnimation]
 })
 export class AppComponent implements OnInit {
-
-  public currentUser: User;
+  
   public isMenuCollapsed: boolean = false;
   public isMenuExpandedonHover: boolean = true;
   constructor(
@@ -36,7 +33,6 @@ export class AppComponent implements OnInit {
     private viewContainerRef: ViewContainerRef,
     private zone: NgZone,
     private router: Router,
-    private _userService: UserService,
   ) {
     this._state.subscribe('menu.isCollapsed', (isCollapsed) => {
       this.isMenuCollapsed = isCollapsed;
@@ -47,19 +43,8 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.currentUser = this._userService.getCurrentUser() || null;
     // After Loggin Success fire this event
-    this._globalEventsManager.userLoggedInEmitter.subscribe(
-      (isLoggedIn) => this.zone.run(() => {
-        // mode will be null the first time it is created,
-        if (isLoggedIn !== null) {
-          if (isLoggedIn) {
-            this.currentUser = this._userService.getCurrentUser();
-          } else {
-            this.currentUser = null;
-          }
-        }
-      }));
+  
     window.addEventListener('keydown', this.handleKeyboardZoom);
     window.addEventListener('mousewheel', this.handleMouseScrollZoom);
     window.addEventListener('DOMMouseScroll', this.handleMouseScrollZoom);

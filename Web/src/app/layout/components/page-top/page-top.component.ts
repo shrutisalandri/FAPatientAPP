@@ -8,10 +8,7 @@ import { GlobalEventsManager } from '../../../shared/utilities/global-events-man
 import { GlobalState } from '../../../app.global.state';
 import { Observable } from 'rxjs/Rx';
 import { Router, ActivatedRoute } from '@angular/router';
-import { UserService } from "../../../shared/services/user.service";
 
-import { User } from '../../../shared/models/user';
-import { Role } from '../../../shared/models/role.enum';
 import * as _ from 'lodash';
 @Component({
     selector: 'app-page-top',
@@ -29,34 +26,18 @@ export class PageTopComponent implements AfterViewInit {
     //public loggedinCustomer: SelectedListItem = new SelectedListItem();
     private selectedCustomer: string;
     private selectedClient: string;
-    private userDetails: User;
-    private role = Role;
     private currentUrl: string;
     constructor(
         private route: ActivatedRoute,
         private _state: GlobalState,
         private router: Router,
-        private _userService: UserService,
-       
+      
         private _globalEventsManager: GlobalEventsManager,
         @Inject('Store') private storage: Storage,
         private zone: NgZone) {
        
 
-        this.userDetails = this._userService.getCurrentUser();
-        if (this.userDetails) {
-            this.name = this.userDetails.name;
-            // Prepare menu
-            this.prepareMenus();
-            this._globalEventsManager.addEmitter.subscribe(
-                (isReload) => this.zone.run(() => {
-                    // mode will be null the first time it is created,
-                    if (_globalEventsManager !== null) {
-                        
-                    }
-                }));
-            this.activeMenuItem = this.menuList[0].title;
-        }
+       
     }
     public ngAfterViewInit(): void {
         jQuery('[data-toggle="tooltip"]').tooltip({
@@ -85,31 +66,6 @@ export class PageTopComponent implements AfterViewInit {
         this.router.navigate([path], { queryParams: { refresh: Math.floor(Math.random() * 100) } });
     }
     private prepareMenus() {
-        this.menuList = this.userDetails.roleName == Role[Role.Admin].toString() ?
-            [{
-                title: 'Customer',
-                link: '/customer',
-                icon: 'fa fa-address-card'
-            },
-            {
-                title: 'Client',
-                link: '/client/add',
-                icon: 'fa fa-user-plus'
-            },
-            {
-                title: 'Client Api',
-                link: '/client',
-                icon: 'fa fa-cogs'
-            }]
-            : [{
-                title: 'Client',
-                link: '/client/add',
-                icon: 'fa fa-user-plus'
-            },
-            {
-                title: 'Client Api',
-                link: '/client',
-                icon: 'fa fa-cogs'
-            }];
+  
     }
 }

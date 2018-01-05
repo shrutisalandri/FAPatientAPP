@@ -6,14 +6,15 @@
   <div class="row form-group">
     <div class="small-12 columns">
       <a [routerLink]="'/'" class="link style-text-small style-text-light">
+        <i class="fa-arrow-circle-left fa fa-1x"></i>
         Back
       </a>
     </div>
   </div>
 
   <div @fadeInAnimation class="row form-group">
-    <div class="fade-anim small-12 columns" style="width:-webkit-fill-available;    padding: 5px 50px 5px;">
-      <div class="card text-center">
+    <div class="fade-anim small-12 columns" style="width:-webkit-fill-available;    padding: 5px 200px  5px;">
+      <div class="card text-center"style="border-radius: 25px;">
         <div class="card-header">
           Your Peronsonal Details
         </div>
@@ -23,7 +24,7 @@
               <label class="small-2 columns label-text">Title:</label>
             </div>
             <div class="col-md-4">
-              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.title" />
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.Title" />
             </div>
           </div>
           <div class="row form-group" style="padding-top:5px">
@@ -64,8 +65,8 @@
         </div>
       </div>
     </div>
-    <div class="fade-anim small-12 columns" style="width:-webkit-fill-available;    padding: 5px 50px 5px;">
-      <div class="card text-center">
+    <div class="fade-anim small-12 columns" style="width:-webkit-fill-available;    padding: 5px 200px  5px;">
+      <div class="card text-center" style="border-radius: 25px;">
         <div class="card-header">
           Your Contact Details
         </div>
@@ -97,8 +98,8 @@
         </div>
       </div>
     </div>
-    <div class="fade-anim small-12 columns" style="width:-webkit-fill-available;    padding: 5px 50px 5px;">
-      <div class="card text-center">
+    <div class="fade-anim small-12 columns" style="width:-webkit-fill-available;    padding: 5px 200px  5px;">
+      <div class="card text-center" style="border-radius: 25px;">
         <div class="card-header">Your Address</div>
         <div class="card-block">
           <div class="row form-group" style="padding-top:5px">
@@ -180,8 +181,8 @@
       </div>
     </div>
 
-    <div class="fade-anim small-12 columns" style="width:-webkit-fill-available;    padding: 5px 50px 5px;">
-      <div class="card text-center">
+    <div class="fade-anim small-12 columns" style="width:-webkit-fill-available;    padding: 5px 200px  5px;">
+      <div class="card text-center" style="border-radius: 25px;">
         <div class="card-header">
           Your Health Fund Details
         </div>
@@ -258,8 +259,8 @@
         </div>
       </div>
     </div>
-    <div class=" small-12 columns" style="width:-webkit-fill-available;text-align:center ; padding: 5px 50px 5px;">
-      <button type="button" class="button btn-primary btn-radius" (click)="SubmitPatient()">submit</button>
+    <div class=" small-12 columns" style="width:-webkit-fill-available;text-align:center ; padding: 5px 200px  5px;">
+      <button type="button" class="button btn-primary btn-radius custbtn" (click)="SubmitPatient()">submit</button>
     </div>
     </div>
   </div>
