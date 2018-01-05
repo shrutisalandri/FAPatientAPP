@@ -33,8 +33,32 @@ namespace BusinessModels
 
         public string ResidentPostCode { set; get; }
 
-        public string UserIdentifier { set; get; }
+        public string PostalAddress { set; get; }
 
-        public string BranchIdentifier { set; get; }
+        public string PostalSuburb { set; get; }
+
+        public string PostalState { set; get; }
+
+        public string PostalPostCode { set; get; }
+
+        public string Phone { set; get; }                    
+
+        public string HealthFundIdentifier { get; set; }
+
+        public string MemberNumber { get; set; }
+
+        public string HealthFundRefNo { get; set; }
+
+        public bool NoHealthFund { get; set; }
+
+        public string MedicareNumber { get; set; }
+
+        public string MeidcareRefNo { get; set; }
+
+        public string MedicareExpiry { get; set; }
+
+        public string DVANumber { get; set; }
+
+
     }
 }

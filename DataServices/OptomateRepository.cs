@@ -119,7 +119,7 @@ namespace DataServices
             return ToCommonPatients(QueryConn<OptomatePatient>($"{SetPassWordQuery} {GetPatientsQuery}"));
         }
 
-        public int InsertPatient(CommonPatient patient, string locationCode)
+        public int InsertPatient(CommonPatient patient)
         {
 
             bool success = false;

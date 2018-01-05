@@ -7,16 +7,6 @@ namespace BusinessModels
     {
         public int ID { get; set; }
 
-        public DateTime? DateAdded { get; set; }
-
-        public string UserAdded { get; set; }
-
-        public DateTime? DateEdited { get; set; }
-
-        public string UserEdited { get; set; }
-
-        public DateTime? TimeStamp { get; set; }
-
         public DateTime? StartDate { get; set; }
 
         public DateTime? EndDate { get; set; }
@@ -30,5 +20,15 @@ namespace BusinessModels
         public int PatientId { get; set; }
 
         public int Duration { get; set; }
+
+        public string FirstName { set; get; }
+
+        public string LastName { set; get; }
+       
+        public DateTime? BirthDate { set; get; }
+
+        public string Title { set; get; }
+
+        public string Gender { set; get; }
     }
 }

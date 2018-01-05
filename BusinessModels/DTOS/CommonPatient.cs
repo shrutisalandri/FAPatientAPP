@@ -43,7 +43,7 @@ namespace BusinessModels.DTOS
 
         public string HealthFundMemberNumber { get; set; }
 
-        public string HeatlhFundRefreenceNumber { get; set; }
+        public string HealthFundReferenceNumber { get; set; }
 
         public string MedicareMemberNumber { get; set; }
 
@@ -54,6 +54,8 @@ namespace BusinessModels.DTOS
         public DateTime? MedicareExpiryDate { get; set; }
 
         public string DVAPensionNumber { get; set; }
+
+        public bool InActive { get; set; }
 
     }
 }

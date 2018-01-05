@@ -36,9 +36,9 @@ namespace BusinessServices
             return _repo.GetPatients();
         }
 
-        public int InsertPatient(CommonPatient patient, string locationCode)
+        public int InsertPatient(CommonPatient patient)
         {
-            return _repo.InsertPatient(patient, locationCode);
+            return _repo.InsertPatient(patient);
         }
 
         public bool UpdatePatient(CommonPatient patient)

@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BusinessServices;
-using DataServices;
 using BusinessServices.Interfaces;
 using DataServices.Interfaces;
 using Unity;
-using Newtonsoft;
-using Newtonsoft.Json;
 using Unity.Resolution;
 using Microsoft.Extensions.Configuration;
+using BusinessModels.DTOS;
 
 namespace WebAPI.Controllers
 {
-    [Produces("application/json")]
-    [Route("api/Home")]
+
+    [Produces("application/json")]   
     public class HomeController : BaseController
     {
         IPatientService _patientService;
@@ -30,100 +25,167 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public string GetPatients(string PMS)
+        [Route("api/GetPatients")]
+        public List<CommonPatient> GetPatients(string PMS)
         {
-
-            if (!string.IsNullOrEmpty(PMS))
+            try
             {
-                _connectionString = _configuration.GetValue<string>("ConnectionString :" + PMS);
-                _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
-                                  {
+                if (!string.IsNullOrEmpty(PMS))
+                {
+                   
+                    _connectionString = _configuration.GetValue<string>("ConnectionStrings:" + PMS);
+                    _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
+                                      {
                                        new ParameterOverride("ConnectionString",_connectionString )
-                                  }));
+                                      }));
 
-                var patients = _patientService.GetPatients();
-
-                return JsonConvert.SerializeObject(patients);
+                    return _patientService.GetPatients();
+                }
+            }
+            catch (Exception ex)
+            {
+                //log
             }
 
-            return string.Empty;
+            return null;
 
         }
 
         [HttpGet]
-        public string GetPatient(string PMS, int Id)
+        [Route("api/GetPatient")]
+        public CommonPatient GetPatient(string PMS, int Id)
         {
 
-            if (!string.IsNullOrEmpty(PMS))
+            try
             {
-                _connectionString = _configuration.GetValue<string>("ConnectionString :" + PMS);
-                _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
-                                  {
+                if (!string.IsNullOrEmpty(PMS))
+                {
+                    _connectionString = _configuration.GetValue<string>("ConnectionStrings:" + PMS);
+                    _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
+                                      {
                                        new ParameterOverride("ConnectionString", _connectionString)
-                                  }));
+                                      }));
 
-                var patient = _patientService.GetPatient(Id);
+                   return _patientService.GetPatient(Id);
 
-                return JsonConvert.SerializeObject(patient);
+                }
+            }
+            catch (Exception ex)
+            {
+                //log
             }
 
-            return string.Empty;
+            return null;
 
         }
 
         [HttpGet]
-        public string GetAppointments(string PMS, DateTime startDate, DateTime endDate)
+        [Route("api/GetAppointments")]
+        public List<CommonAppointment> GetAppointments(string PMS, DateTime startDate, DateTime endDate)
         {
 
-            if (!string.IsNullOrEmpty(PMS))
+            try
             {
-                _connectionString = _configuration.GetValue<string>("ConnectionString :" + PMS);
-                _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
-                                  {
+                if (!string.IsNullOrEmpty(PMS))
+                {
+                    _connectionString = _configuration.GetValue<string>("ConnectionStrings:" + PMS);
+                    _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
+                                      {
                                        new ParameterOverride("ConnectionString",_connectionString )
-                                  }));
+                                      }));
 
-                var appointments = _patientService.GetAppointments(startDate, endDate);
+                    return _patientService.GetAppointments(startDate, endDate);
 
-                return JsonConvert.SerializeObject(appointments);
+                }
+            }
+            catch (Exception ex)
+            {
+                //log
             }
 
-            return string.Empty;
+            return null;
 
         }
 
         [HttpGet]
-        public string GetAppointment(string PMS, int Id)
+        [Route("api/GetAppointment")]
+        public CommonAppointment GetAppointment(string PMS, int Id)
         {
 
-            if (!string.IsNullOrEmpty(PMS))
+            try
             {
-                _connectionString = _configuration.GetValue<string>("ConnectionString :" + PMS);
-                _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
-                                  {
+                if (!string.IsNullOrEmpty(PMS))
+                {
+                    _connectionString = _configuration.GetValue<string>("ConnectionStrings:" + PMS);
+                    _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
+                                      {
                                        new ParameterOverride("ConnectionString", _connectionString)
-                                  }));
+                                      }));
 
-                var appointment = _patientService.GetAppointment(Id);
+                    return _patientService.GetAppointment(Id);
 
-                return JsonConvert.SerializeObject(appointment);
+                }
+            }
+            catch (Exception ex)
+            {
+                //log
             }
 
-            return string.Empty;
+            return null;
 
         }
 
 
         [HttpPost]
-        public void InsertPatient()
+        [Route("api/InsertPatient")]
+        public int InsertPatient(string PMS, CommonPatient patient)
         {
+            try
+            {
+                if (!string.IsNullOrEmpty(PMS))
+                {
+                    _connectionString = _configuration.GetValue<string>("ConnectionStrings:" + PMS);
+                    _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
+                                      {
+                                       new ParameterOverride("ConnectionString", _connectionString)
+                                      }));
 
+                    return _patientService.InsertPatient(patient);
+                }
+            }
+            catch (Exception ex)
+            {
+                //log
+            }
+
+            return 0;
+            
         }
 
         [HttpPost]
-        public void UpdatePatient()
+        [Route("api/UpdatePatient")]
+        public bool UpdatePatient(string PMS, CommonPatient patient)
         {
+            try
+            {
+                if (!string.IsNullOrEmpty(PMS))
+                {
+                    _connectionString = _configuration.GetValue<string>("ConnectionStrings:" + PMS);
+                    _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
+                                      {
+                                       new ParameterOverride("ConnectionString", _connectionString)
+                                      }));
 
+                    return _patientService.UpdatePatient(patient);
+                }
+            }
+            catch (Exception ex)
+            {
+                //log
+            }
+
+            return false;
+           
         }
 
 

@@ -15,7 +15,7 @@ namespace DataServices.Interfaces
 
         CommonPatient GetPatient(int PatientId);
 
-        int InsertPatient(CommonPatient patient, string locationCode);
+        int InsertPatient(CommonPatient patient);
 
         bool UpdatePatient(CommonPatient patient);
 
