@@ -29,7 +29,6 @@ namespace WebAPI.Controllers
             _configuration = configuration;
         }
 
-        // GET: api/Home
         [HttpGet]
         public string GetPatients(string PMS)
         {
@@ -69,6 +68,61 @@ namespace WebAPI.Controllers
             }
 
             return string.Empty;
+
+        }
+
+        [HttpGet]
+        public string GetAppointments(string PMS, DateTime startDate, DateTime endDate)
+        {
+
+            if (!string.IsNullOrEmpty(PMS))
+            {
+                _connectionString = _configuration.GetValue<string>("ConnectionString :" + PMS);
+                _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
+                                  {
+                                       new ParameterOverride("ConnectionString",_connectionString )
+                                  }));
+
+                var appointments = _patientService.GetAppointments(startDate, endDate);
+
+                return JsonConvert.SerializeObject(appointments);
+            }
+
+            return string.Empty;
+
+        }
+
+        [HttpGet]
+        public string GetAppointment(string PMS, int Id)
+        {
+
+            if (!string.IsNullOrEmpty(PMS))
+            {
+                _connectionString = _configuration.GetValue<string>("ConnectionString :" + PMS);
+                _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
+                                  {
+                                       new ParameterOverride("ConnectionString", _connectionString)
+                                  }));
+
+                var appointment = _patientService.GetAppointment(Id);
+
+                return JsonConvert.SerializeObject(appointment);
+            }
+
+            return string.Empty;
+
+        }
+
+
+        [HttpPost]
+        public void InsertPatient()
+        {
+
+        }
+
+        [HttpPost]
+        public void UpdatePatient()
+        {
 
         }
 
