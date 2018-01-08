@@ -19,7 +19,7 @@ namespace DataServices
              [PATIENTID] AS PatientId, [DURATION] AS Duration,[GIVEN] AS FirstName, [SURNAME] AS LastName, [BIRTHDATE] AS BirthDate, [TITLE] AS  Title, [GENDER] AS Gender
              FROM [dbo].[APPOINTMENT] APP WITH(NOLOCK)
 			 JOIN [dbo].[PATIENT] PA WITH(NOLOCK) ON PA.ID = APP.PATIENTID
-             WHERE [ID] = @AppointmentId";
+             WHERE APP.[ID] = @appointmentId";
 
         const string GetAppointmentsQuery = @"SELECT APP.[ID], [STARTDATE] as StartDate,
              [ENDDATE] AS EndDate, APP.[BRANCH_IDENTIFIER] AS BranchIdentifier, APP.[USER_IDENTIFIER] AS UserIdentifier,
@@ -29,26 +29,27 @@ namespace DataServices
             WHERE STARTDATE >= @StartDate AND ENDDATE <= @EndDate";
 
         const string InsertPatientQuery = @"INSERT INTO [dbo].[PATIENT]
-            ([DATE_ADDED], [USER_ADDED], [TIMESTMP], [TITLE], [GIVEN], [MIDDLE], [SURNAME], [BIRTHDATE], [GENDER], [INACTIVE],
+            ([DATE_ADDED], [USER_ADDED], [TIMESTMP], [TITLE], [GIVEN], [SURNAME], [BIRTHDATE], [GENDER], [INACTIVE],
              [RESIDENT_ADDRESS], [RESIDENT_SUBURB], [RESIDENT_STATE], [RESIDENT_POSTCODE], [POSTAL_ADDRESS], [POSTAL_SUBURB],
              [POSTAL_STATE], [POSTAL_POSTCODE], [MOBILE_PHONE], [HOME_PHONE],[EMAIL],
              [HEALTHFUND_IDENTIFIER], [MEMBER_NUMBER], [HEALTHFUND_REFNO], [NO_HEALTHFUND], [MEDICARE_NUMBER], [MEDICARE_REFNO],
              [MEDICARE_EXPIRY], [DVA_NUMBER])
-            VALUES (GetDate(),'FSTAVAILABLE', GetDate(), @Title, @FirstName, @Middle, @LastName, @BirthDate, @Gender, @InActive, @ResidentAddress,
+            VALUES (GetDate(),'FSTAVAILABLE', GetDate(), @Title, @FirstName, @LastName, @BirthDate, @Gender, @InActive, @ResidentAddress,
             @ResidentSuburb, @ResidentState, @ResidentPostCode, @PostalAddress, @PostalSuburb, @PostalState, @PostalPostCode, @Mobile, @Phone,
             @Email, @HealthFundIdentifier, @MemberNumber, @HealthFundRefNo, @NoHealthFund, @MedicareNumber,
             @MedicareRefNo, @MedicareExpiry, @DVANumber);
             SELECT SCOPE_IDENTITY()";
 
         const string UpdatePatientQuery = @"UPDATE [dbo].[PATIENT]
-            SET [USER_ADDED]='FSTAVAILABLE', [TITLE] = @Title, [GIVEN] = @FirstName, [MIDDLE] = @Middle, [SURNAME] = @LastName, 
+            SET [USER_EDITED] ='FSTAVAILABLE',[DATE_EDITED] = GetDate(), [TITLE] = @Title, [GIVEN] = @FirstName, [SURNAME] = @LastName, 
             [BIRTHDATE] = @BirthDate,[GENDER] = @Gender, [INACTIVE] = @InActive, [RESIDENT_ADDRESS] = @ResidentAddress,
             [RESIDENT_SUBURB] = @ResidentSuburb, [RESIDENT_STATE] = @ResidentState, [RESIDENT_POSTCODE] = @ResidentPostCode,
             [POSTAL_ADDRESS] = @PostalAddress, [POSTAL_SUBURB] = @PostalSuburb,[POSTAL_STATE] = @PostalState, [POSTAL_POSTCODE] = @PostalPostCode,
             [MOBILE_PHONE] = @Mobile, [HOME_PHONE] = @Phone ,[EMAIL] = @Email,
             [HEALTHFUND_IDENTIFIER] = @HealthFundIdentifier, [MEMBER_NUMBER] = @MemberNumber,
             [HEALTHFUND_REFNO] = @HealthFundRefNo, [NO_HEALTHFUND] = @NoHealthFund, [MEDICARE_NUMBER] = @MedicareNumber,
-            [MEDICARE_REFNO] = @MedicareRefNo, [MEDICARE_EXPIRY] = @MedicareExpiry, [DVA_NUMBER] = @DVANumber";
+            [MEDICARE_REFNO] = @MedicareRefNo, [MEDICARE_EXPIRY] = @MedicareExpiry, [DVA_NUMBER] = @DVANumber
+            WHERE ID = @PatientId";
 
 
         const string GetPatientQuery = @"SELECT [ID], [TITLE] AS Title, [GIVEN] AS FirstName,[MIDDLE] AS Middle, [SURNAME] AS LastName,    
@@ -129,6 +130,12 @@ namespace DataServices
                 ResidentSuburb = patient.ResidentialSuburb,
                 ResidentState = patient.ResidentialState,
                 ResidentPostCode = patient.ResidentialPostCode,
+
+                PostalAddress = patient.PostalAddress,
+                PostalSuburb = patient.PostalSuburb,
+                PostalState = patient.PostalState,
+                PostalPostCode = patient.PostalPostCode,
+
                 Mobile = patient.Mobile,
                 Email = patient.Email,
                 Phone = patient.Phone,
@@ -150,6 +157,7 @@ namespace DataServices
         {
             var sqlParams = new
             {
+                PatientId = patient.Id,
                 Title = patient.Title,
                 FirstName = patient.FirstName,
                 LastName = patient.LastName,
@@ -160,6 +168,12 @@ namespace DataServices
                 ResidentSuburb = patient.ResidentialSuburb,
                 ResidentState = patient.ResidentialState,
                 ResidentPostCode = patient.ResidentialPostCode,
+
+                PostalAddress = patient.PostalAddress,
+                PostalSuburb = patient.PostalSuburb,
+                PostalState = patient.PostalState,
+                PostalPostCode = patient.PostalPostCode,
+
                 Mobile = patient.Mobile,
                 Email = patient.Email,
                 Phone = patient.Phone,
@@ -174,7 +188,7 @@ namespace DataServices
 
             };
 
-            return ExecScalarConn(UpdatePatientQuery, sqlParams) > 0;
+            return ExecConn(UpdatePatientQuery, sqlParams) > 0;
         }
 
         public List<CommonAppointment> GetAppointments(DateTime startDate, DateTime endDate)
@@ -227,6 +241,7 @@ namespace DataServices
         {
             return new CommonPatient()
             {
+                Id = optomatePatient.ID,
                 Title = optomatePatient.Title,
                 FirstName = optomatePatient.FirstName,
                 LastName = optomatePatient.LastName,
