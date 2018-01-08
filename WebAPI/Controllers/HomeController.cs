@@ -12,7 +12,7 @@ using BusinessModels.DTOS;
 namespace WebAPI.Controllers
 {
 
-    [Produces("application/json")]   
+    [Produces("application/json")]
     public class HomeController : BaseController
     {
         IPatientService _patientService;
@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
             {
                 if (!string.IsNullOrEmpty(PMS))
                 {
-                   
+
                     _connectionString = _configuration.GetValue<string>("ConnectionStrings:" + PMS);
                     _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
                                       {
@@ -40,6 +40,33 @@ namespace WebAPI.Controllers
                                       }));
 
                     return _patientService.GetPatients();
+                }
+            }
+            catch (Exception ex)
+            {
+                //log
+            }
+
+            return null;
+
+        }
+
+        [HttpGet]
+        [Route("api/SearchPatients")]
+        public List<CommonPatient> SearchPatients(string PMS, int patientId, string firstName, string lastName)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(PMS))
+                {
+
+                    _connectionString = _configuration.GetValue<string>("ConnectionStrings:" + PMS);
+                    _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
+                                      {
+                                       new ParameterOverride("ConnectionString",_connectionString )
+                                      }));
+
+                    return _patientService.SearchPatients(patientId, firstName, lastName);
                 }
             }
             catch (Exception ex)
@@ -66,7 +93,7 @@ namespace WebAPI.Controllers
                                        new ParameterOverride("ConnectionString", _connectionString)
                                       }));
 
-                   return _patientService.GetPatient(Id);
+                    return _patientService.GetPatient(Id);
 
                 }
             }
@@ -83,7 +110,7 @@ namespace WebAPI.Controllers
         [Route("api/GetAppointments")]
         public List<CommonAppointment> GetAppointments(string PMS, DateTime startDate, DateTime endDate)
         {
-
+           
             try
             {
                 if (!string.IsNullOrEmpty(PMS))
@@ -159,7 +186,7 @@ namespace WebAPI.Controllers
             }
 
             return 0;
-            
+
         }
 
         [HttpPost]
@@ -185,7 +212,7 @@ namespace WebAPI.Controllers
             }
 
             return false;
-           
+
         }
 
 

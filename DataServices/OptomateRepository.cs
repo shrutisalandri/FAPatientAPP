@@ -179,6 +179,11 @@ namespace DataServices
             throw new NotImplementedException();
         }
 
+        public List<CommonPatient> SearchPatients(int patientId, string firstName, string lastName)
+        {
+            throw new NotImplementedException();
+        }
+
         private int GetAppointmentNextId()
         {
             try
@@ -322,5 +327,6 @@ namespace DataServices
             };
         }
 
+     
     }
 }

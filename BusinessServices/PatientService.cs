@@ -36,6 +36,12 @@ namespace BusinessServices
             return _repo.GetPatients();
         }
 
+        public List<CommonPatient> SearchPatients(int patientId, string firstName, string lastName)
+        {
+            return _repo.SearchPatients(patientId, firstName, lastName);
+        }
+
+
         public int InsertPatient(CommonPatient patient)
         {
             return _repo.InsertPatient(patient);

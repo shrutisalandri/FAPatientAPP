@@ -6,6 +6,8 @@ using System.Data.SqlClient;
 using BusinessModels;
 using System.Linq;
 using BusinessModels.DTOS;
+using Newtonsoft.Json;
+using System.Dynamic;
 
 namespace DataServices
 {
@@ -52,7 +54,7 @@ namespace DataServices
             WHERE ID = @PatientId";
 
 
-        const string GetPatientQuery = @"SELECT [ID], [TITLE] AS Title, [GIVEN] AS FirstName,[MIDDLE] AS Middle, [SURNAME] AS LastName,    
+        const string GetPatientQuery = @"SELECT [ID], [TITLE] AS Title, [GIVEN] AS FirstName, [SURNAME] AS LastName,    
             [BIRTHDATE] AS BirthDate, [GENDER] AS Gender, [INACTIVE] AS InActive, [RESIDENT_ADDRESS] AS ResidentAddress,
             [RESIDENT_SUBURB] AS ResidentSuburb, [RESIDENT_STATE] AS ResidentState, [RESIDENT_POSTCODE] AS ResidentPostCode,
             [POSTAL_ADDRESS] AS PostalAddress, [POSTAL_SUBURB] AS PostalSuburb, [POSTAL_STATE] AS PostalState, [POSTAL_POSTCODE] AS PostalPostCode,
@@ -63,7 +65,7 @@ namespace DataServices
             FROM [Optomate].[dbo].[PATIENT] WITH(NOLOCK)
             WHERE [ID] = @PatientId";
 
-        const string GetPatientsQuery = @"SELECT [ID], [TITLE] AS Title, [GIVEN] AS FirstName, [MIDDLE] AS Middle, [SURNAME] AS LastName,    
+        const string GetPatientsQuery = @"SELECT [ID], [TITLE] AS Title, [GIVEN] AS FirstName, [SURNAME] AS LastName,    
             [BIRTHDATE] AS BirthDate, [GENDER] AS Gender, [INACTIVE] AS InActive, [RESIDENT_ADDRESS] AS ResidentAddress,
             [RESIDENT_SUBURB] AS ResidentSuburb, [RESIDENT_STATE] AS ResidentState, [RESIDENT_POSTCODE] AS ResidentPostCode,
             [POSTAL_ADDRESS] AS PostalAddress, [POSTAL_SUBURB] AS PostalSuburb, [POSTAL_STATE] AS PostalState, [POSTAL_POSTCODE] AS PostalPostCode,
@@ -71,7 +73,19 @@ namespace DataServices
             [HEALTHFUND_IDENTIFIER] AS HealthFundIdentifier, [MEMBER_NUMBER] AS MemberNumber, [HEALTHFUND_REFNO] AS HealthFundRefNo,
             [NO_HEALTHFUND] AS NoHealthFund, [MEDICARE_NUMBER] AS MedicareNumber, [MEDICARE_REFNO] AS MedicareRefNo,
             [MEDICARE_EXPIRY] AS MedicareExpiry, [DVA_NUMBER] AS DVANumber
-            FROM [Optomate].[dbo].[PATIENT] WITH(NOLOCK)";
+            FROM [Optomate].[dbo].[PATIENT] WITH(NOLOCK) 
+            WHERE (INACTIVE IS NULL OR INACTIVE = 0 )";
+
+        const string GetPatientsSearchQuery = @"SELECT [ID], [TITLE] AS Title, [GIVEN] AS FirstName, [SURNAME] AS LastName,    
+            [BIRTHDATE] AS BirthDate, [GENDER] AS Gender, [INACTIVE] AS InActive, [RESIDENT_ADDRESS] AS ResidentAddress,
+            [RESIDENT_SUBURB] AS ResidentSuburb, [RESIDENT_STATE] AS ResidentState, [RESIDENT_POSTCODE] AS ResidentPostCode,
+            [POSTAL_ADDRESS] AS PostalAddress, [POSTAL_SUBURB] AS PostalSuburb, [POSTAL_STATE] AS PostalState, [POSTAL_POSTCODE] AS PostalPostCode,
+            [MOBILE_PHONE] AS Mobile, [HOME_PHONE] AS Phone, [EMAIL] AS Email,
+            [HEALTHFUND_IDENTIFIER] AS HealthFundIdentifier, [MEMBER_NUMBER] AS MemberNumber, [HEALTHFUND_REFNO] AS HealthFundRefNo,
+            [NO_HEALTHFUND] AS NoHealthFund, [MEDICARE_NUMBER] AS MedicareNumber, [MEDICARE_REFNO] AS MedicareRefNo,
+            [MEDICARE_EXPIRY] AS MedicareExpiry, [DVA_NUMBER] AS DVANumber
+            FROM [Optomate].[dbo].[PATIENT] WITH(NOLOCK) 
+            WHERE (INACTIVE IS NULL OR INACTIVE = 0 ) AND ";
 
         public OptomateTouchRepository(string ConnectionString)
         {
@@ -105,17 +119,51 @@ namespace DataServices
             }
         }
 
-        public List<CommonPatient> GetPatients()
-        {
-            return ToCommonPatients(QueryConn<OptomateTouchPatient>(GetPatientsQuery));
-        }
-
         public CommonPatient GetPatient(int PatientId)
         {
             var sqlParams = new { PatientId = PatientId };
             return ToCommonPatient(QueryConn<OptomateTouchPatient>(GetPatientQuery, sqlParams).FirstOrDefault());
         }
 
+        public List<CommonPatient> GetPatients()
+        {
+            return ToCommonPatients(QueryConn<OptomateTouchPatient>(GetPatientsQuery));
+        }
+
+        public List<CommonPatient> SearchPatients(int patientId, string firstName, string lastName)
+        {
+            string query = GetPatientsSearchQuery;
+
+            dynamic sqlParams = new ExpandoObject();
+
+            if (patientId != 0)
+            {
+                sqlParams.PatientId = patientId;
+
+                query += "[ID]= @PatientId AND";
+
+            }
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                sqlParams.FirstName = firstName;
+
+                query += "[GIVEN]= @FirstName AND ";
+
+            }
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                sqlParams.LastName = lastName;
+
+                query += "[SURNAME]= @LastName AND";
+
+            }
+
+            query = query.Remove(query.Length - 3);
+
+            return ToCommonPatients(QueryConn<OptomateTouchPatient>(query, sqlParams));
+        }
+
+       
         public int InsertPatient(CommonPatient patient)
         {
             var sqlParams = new

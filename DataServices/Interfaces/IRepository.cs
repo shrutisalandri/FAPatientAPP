@@ -13,6 +13,8 @@ namespace DataServices.Interfaces
     {
         List<CommonPatient> GetPatients();
 
+        List<CommonPatient> SearchPatients(int patientId, string firstName, string lastName);
+
         CommonPatient GetPatient(int PatientId);
 
         int InsertPatient(CommonPatient patient);
