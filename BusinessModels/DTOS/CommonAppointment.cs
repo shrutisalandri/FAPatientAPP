@@ -10,8 +10,6 @@ namespace BusinessModels.DTOS
     {
         public int ID { get; set; }
 
-        //public DateTime? TimeStamp { get; set; }
-
         public DateTime? StartDate { get; set; }
 
         public DateTime? EndDate { get; set; }
@@ -24,6 +22,16 @@ namespace BusinessModels.DTOS
 
         public int PatientId { get; set; }
 
-        public int Duration { get; set; }
+        public int Duration { get; set; }    
+
+        public string FirstName { set; get; }
+
+        public string LastName { set; get; }
+
+        public DateTime? BirthDate { set; get; }
+
+        public string Title { set; get; }
+
+        public string Gender { set; get; }
     }
 }

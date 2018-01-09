@@ -140,30 +140,30 @@ namespace DataServices
             {
                 sqlParams.PatientId = patientId;
 
-                query += "[ID]= @PatientId AND";
+                query += " [ID]= @PatientId AND";
 
             }
             if (!string.IsNullOrEmpty(firstName))
             {
-                sqlParams.FirstName = firstName;
+                sqlParams.FirstName = firstName.Trim();
 
-                query += "[GIVEN]= @FirstName AND ";
+                query += " ([GIVEN]= @FirstName OR [GIVEN] LIKE '%@FirstName%') AND";
 
             }
             if (!string.IsNullOrEmpty(lastName))
             {
-                sqlParams.LastName = lastName;
+                sqlParams.LastName = lastName.Trim();
 
-                query += "[SURNAME]= @LastName AND";
+                query += " ([SURNAME]= @LastName OR [SURNAME] LIKE '%@LastName%') AND";
 
             }
 
             query = query.Remove(query.Length - 3);
 
-            return ToCommonPatients(QueryConn<OptomateTouchPatient>(query, sqlParams));
+            return ToCommonPatients(QueryConn<OptomatePatient>(query, sqlParams));
         }
 
-       
+
         public int InsertPatient(CommonPatient patient)
         {
             var sqlParams = new
@@ -333,6 +333,13 @@ namespace DataServices
                 AppointmentType = optomateAppointment.AppointmentType,
                 PatientId = optomateAppointment.PatientId,
                 Duration = optomateAppointment.Duration,
+
+                FirstName = optomateAppointment.FirstName,
+                LastName = optomateAppointment.LastName,
+                BirthDate = optomateAppointment.BirthDate,
+                Title = optomateAppointment.Title,
+                Gender = optomateAppointment.Gender,
+
             };
         }
 

@@ -110,7 +110,10 @@ namespace WebAPI.Controllers
         [Route("api/GetAppointments")]
         public List<CommonAppointment> GetAppointments(string PMS, DateTime startDate, DateTime endDate)
         {
-           
+
+            startDate = DateTime.Today.AddDays(-20);
+            endDate = DateTime.Today;
+
             try
             {
                 if (!string.IsNullOrEmpty(PMS))

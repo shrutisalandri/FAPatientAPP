@@ -7,6 +7,7 @@ using Shared.Core;
 using System.Data.Odbc;
 using Dapper;
 using System.Linq;
+using System.Dynamic;
 
 namespace DataServices
 {
@@ -33,19 +34,40 @@ namespace DataServices
         public const string InsertPatientQuery = @"INSERT INTO CLIENT (NUMBER,GIVEN,SURNAME,ADDRESS1,SUBURB,STATE,POSTCODE,PHONE_AH,PHONE_MOB,EMAIL,BIRTHDATE) 
                                                    VALUES(?Number?, ?Given?, ?Surname?, ?Address1?, ?Suburb?, ?State?, ?Postcode?, ?Phone_Ah?, ?Phone_Mob?, ?Email?, ?BirthDate? );";
 
+        public const string GetAppointmentsQuery = @"SELECT  Id,""start"",""finish"", apptype, APPNEXUS.Branch, Optom,
+                                                   ClientNum, Given, Surname, BirthDate, Title, Sex
+                                                   FROM APPNEXUS
+                                                   JOIN Client ON APPNEXUS.clientnum=Client.number
+                                                   WHERE CAST(""start"" as date) >=CAST(?start? AS DATE) AND 
+                                                   CAST(""finish"" as date) <=CAST(?finish? AS DATE)";
+
+        public const string GetAppointmentQuery = @"SELECT  Id,""start"",""finish"", apptype, APPNEXUS.Branch, Optom,
+                                                   ClientNum, Given, Surname, BirthDate, Title, Sex
+                                                   FROM APPNEXUS
+                                                   JOIN Client ON APPNEXUS.clientnum=Client.number
+                                                   WHERE ID=?bookingId?";
 
 
-        public const string GetBookingsQuery = @"SELECT ID,""start"",""finish"",caption,location,message,clientnum,branch,resourceId,smsconfirm,sentsms,apptype,syncId 
-                                                 from ""APPNEXUS"" where cast(""start"" as date) >=CAST(?start? AS DATE) and cast(""finish"" as date) <=CAST(?finish? AS DATE)";
-        public const string GetBookingQuery = @"SELECT ID,""start"",""finish"",caption,location,message,clientnum,branch,resourceId,smsconfirm,sentsms,apptype,syncId 
-                                                 from ""APPNEXUS"" where ?bookingId?";
+        public const string GetPatientQuery = @"SELECT Number, Title, Given, Surname, Address1, Suburb, State,
+                                                Postcode, Phone_Ah, Phone_Mob, Email, BirthDate,
+                                                Sex, Medicare, MedRef, Expiry, BenefitNum, HealthFund,
+                                                MemberNum, IsInActive
+                                                FROM CLIENT 
+                                                WHERE NUMBER =?patientId?";
 
+        public const string GetPatientsQuery = @"SELECT Number, Title, Given, Surname, Address1, Suburb, State,
+                                                Postcode, Phone_Ah, Phone_Mob, Email, BirthDate,
+                                                Sex, Medicare, MedRef, Expiry, BenefitNum, HealthFund,
+                                                MemberNum, IsInActive
+                                                FROM CLIENT
+                                                WHERE (IsInActive IS NULL OR IsInActive =false )";
 
-        public const string GetPatientQuery = @"SELECT Number,Title,Given,Surname,Address1,Suburb,State,Postcode,Phone_Ah,Phone_Mob,Email,BirthDate,Comment,Optom from CLIENT 
-                                                WHERE Given =?patientId?";
-
-        public const string GetPatientsQuery = @"select Number,Title,Given,Surname,Address1,Suburb,State,Postcode,Phone_Ah,Phone_Mob,Email,BirthDate,Comment,Optom from CLIENT 
-           ";
+        public const string GetPatientsSearchQuery = @"SELECT Number, Title, Given, Surname, Address1, Suburb, State,
+                                                Postcode, Phone_Ah, Phone_Mob, Email, BirthDate,
+                                                Sex, Medicare, MedRef, Expiry, BenefitNum, HealthFund,
+                                                MemberNum, IsInActive
+                                                FROM CLIENT 
+                                                WHERE (IsInActive IS NULL OR IsInActive = false ) AND";
 
         public const string SelectClientNextId = @"SELECT COALESCE(LASTPATNUM,0)+1 FROM GenerateNumbers ";
 
@@ -88,10 +110,10 @@ namespace DataServices
         {
             var sqlParams = new
             {
-                appointmentId = appointmentId
+                bookingId = appointmentId
             };
 
-            return ToCommonAppointment(QueryConn<OptomateAppointment>(GetBookingQuery, sqlParams).FirstOrDefault());
+            return ToCommonAppointment(QueryConn<OptomateAppointment>($"{SetPassWordQuery} {GetAppointmentQuery}", sqlParams).FirstOrDefault());
         }
 
         public List<CommonAppointment> GetAppointments(DateTime startDate, DateTime endDate)
@@ -103,15 +125,18 @@ namespace DataServices
                 finish = DateUtils.ToYYYY_MM_DD(endDate)
             };
 
-            return ToCommonAppointments(QueryConn<OptomateAppointment>(GetBookingsQuery, sqlParams));
+            return ToCommonAppointments(QueryConn<OptomateAppointment>($"{SetPassWordQuery} {GetAppointmentsQuery}", sqlParams));
 
         }
 
         public CommonPatient GetPatient(int patientId)
         {
             var sqlParams = new DynamicParameters(new { patientId = patientId });
-            return ToCommonPatient(QueryConn<OptomatePatient>($"{SetPassWordQuery} {GetPatientQuery}",
-                sqlParams).FirstOrDefault());
+
+            OptomatePatient patient = QueryConn<OptomatePatient>($"{SetPassWordQuery} {GetPatientQuery}",
+                sqlParams).FirstOrDefault();
+
+            return ToCommonPatient(patient);
         }
 
         public List<CommonPatient> GetPatients()
@@ -181,7 +206,35 @@ namespace DataServices
 
         public List<CommonPatient> SearchPatients(int patientId, string firstName, string lastName)
         {
-            throw new NotImplementedException();
+            string query = $"{SetPassWordQuery} {GetPatientsSearchQuery}";
+
+            dynamic sqlParams = new ExpandoObject();
+
+            if (patientId != 0)
+            {
+                sqlParams.PatientId = patientId;
+
+                query += " (ID= ?PatientId?) AND";
+
+            }
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                sqlParams.FirstName = firstName.Trim();
+
+                query += " (GIVEN= ?FirstName? OR GIVEN LIKE '%?FirstName?%' IGNORE CASE) AND";
+
+            }
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                sqlParams.LastName = lastName;
+
+                query += " (SURNAME= ?LastName? OR SURNAME LIKE '%?LastName?%' IGNORE CASE) AND";
+
+            }
+
+            query = query.Remove(query.Length - 3);
+
+            return ToCommonPatients(QueryConn<OptomateTouchPatient>(query, sqlParams));
         }
 
         private int GetAppointmentNextId()
@@ -284,29 +337,28 @@ namespace DataServices
                 FirstName = optomatePatient.Given,
                 LastName = optomatePatient.Surname,
                 DateOfBirth = optomatePatient.BirthDate,
-                //Gender = optomatePatient.,
-                Mobile = optomatePatient.Mobile,
+                Gender = optomatePatient.Sex,
+                Mobile = optomatePatient.Phone_Mob,
                 Email = optomatePatient.Email,
-                //Phone = optomatePatient.Phone,
+                Phone = optomatePatient.Phone_Ah,
                 ResidentialAddress = optomatePatient.Address1,
                 ResidentialSuburb = optomatePatient.Suburb,
                 ResidentialPostCode = optomatePatient.State,
                 ResidentialState = optomatePatient.Postcode,
+
+                HealthFundName = optomatePatient.HealthFund,
+                HealthFundMemberNumber = optomatePatient.MemberNum,
+                MedicareMemberNumber = optomatePatient.Medicare,
+                HasHealthFund = !(string.IsNullOrEmpty(optomatePatient.HealthFund)),
+                MeidcareReferenceNumber = optomatePatient.MedRef
 
                 //PostAddressSameAsResidentialAddress = optomatePatient.Title,
                 //PostalAddress = optomatePatient.Title,
                 //PostalSuburb = optomatePatient.Title,
                 //PostalPostCode = optomatePatient.Title,
                 //PostalState = optomatePatient.Title,
-
-                //HealthFundName = optomatePatient.HealthFundName,
-                //HealthFundMemberNumber = optomatePatient.HealthFundMemberNumber,
-                //HeatlhFundRefreenceNumber = optomatePatient.HeatlhFundRefreenceNumber,
-                //MedicareMemberNumber = optomatePatient.MedicareMemberNumber,
-
-                //HasHealthFund = optomatePatient.HasHealthFund,
-                //MeidcareReferenceNumber = optomatePatient.MeidcareReferenceNumber,
-                //MedicareExpiryDate = optomatePatient.MedicareExpiryDate,
+                //HealthFundReferenceNumber = optomatePatient.,
+                //MedicareExpiryDate = optomatePatient.Expiry,
                 //DVAPensionNumber = optomatePatient.DVAPensionNumber
             };
 
@@ -320,13 +372,18 @@ namespace DataServices
                 ID = optomateAppointment.Id,
                 EndDate = optomateAppointment.Finish,
                 BranchIdentifier = optomateAppointment.Branch,
-                //UserIdentifier = optomateAppointment.UserIdentifier,
-                AppointmentType = optomateAppointment.Appttype,
+                UserIdentifier = optomateAppointment.Optom,
+                AppointmentType = optomateAppointment.Apptype,
                 PatientId = optomateAppointment.ClientNum,
                 //Duration = optomateAppointment.Duration,
+                FirstName = optomateAppointment.Given,
+                LastName = optomateAppointment.Surname,
+                BirthDate = optomateAppointment.BirthDate,
+                Title = optomateAppointment.Title,
+                Gender = optomateAppointment.Sex
             };
         }
 
-     
+
     }
 }
