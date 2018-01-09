@@ -147,7 +147,7 @@ namespace DataServices
             {
                 sqlParams.FirstName = firstName;
 
-                query += "[GIVEN]= @FirstName AND ";
+                query += "[GIVEN]= @FirstName AND";
 
             }
             if (!string.IsNullOrEmpty(lastName))

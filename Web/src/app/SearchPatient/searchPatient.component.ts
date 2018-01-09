@@ -1,8 +1,11 @@
+/// <reference path="../shared/utilities/http/http-utility.service.ts" />
+/// <reference path="../shared/services/patient.service.ts" />
 /// <reference path="../shared/models/patient.ts" />
 import * as _ from 'lodash';
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
-
+import { PatientService} from '../shared/services/patient.service'
+import { HttpUtility } from '../shared/utilities/http/http-utility.service';
 import {
   Component,
   Inject,
@@ -12,9 +15,11 @@ import {
 } from '@angular/core';
 import { fadeInAnimation, slideInOut } from '../layout/animations/shared-animations';
 import { GlobalEventsManager } from '../shared/utilities/global-events-manager';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { SearchPatient } from '../shared/models/searchPatient';
-
+import { Patient } from '../shared/models/patient';
+import { Subject } from "rxjs/Subject";
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   templateUrl: './searchPatient.component.html',
@@ -25,15 +30,19 @@ import { SearchPatient } from '../shared/models/searchPatient';
 
 
 export class SearchPatientComponent implements OnInit {
-  PatientID: string;
-  FirstName: string;
-  LastName: string;
+  PatientID: number = 0;
+  FirstName: string = '';
+  LastName: string = '';
   checked: boolean;
-  
+ 
+  private unsubscribe: Subject<void> = new Subject<void>();
   PatientList: SearchPatient[] = new Array<SearchPatient>();
-
+  searchPatient: SearchPatient = new SearchPatient();
+  private patient: Patient;
   Patientcols: any[];
-  constructor() {
+  constructor(
+    private _http: HttpUtility,
+    private _patientService: PatientService) {
 
     //var queryParam = this._routeParams.get('PatientID');
     //console.log(queryParam);
@@ -53,17 +62,32 @@ export class SearchPatientComponent implements OnInit {
     console.log("sdds");
   }
   SearchPatient() {
-    let Patient: SearchPatient = new SearchPatient();
-    //Patient= new Patient();
-    Patient.Title = "Title";
-    Patient.FirstName = "FirstName";
-    Patient.LastName = "LastName";
-    Patient.DOB = new Date(Date.now());
-    Patient.Gender = "F";
-    Patient.PatientId = "adad";
-    this.PatientList.push(Patient);
-    console.log(this.PatientList.length);
-    console.log(this.PatientList);
+    let Patientres1: SearchPatient = new SearchPatient();
+
+    this._patientService.getPatients(this.PatientID, this.FirstName, this.LastName)
+      .subscribe(data => {
+        data.forEach(Patient => {
+          let searchPatient = new SearchPatient();
+          this.searchPatient.Title = Patient.title;
+          this.searchPatient.FirstName = Patient.firstName;
+          this.searchPatient.LastName = Patient.lastName;
+          this.searchPatient.DOB = Patient.dateOfBirth;
+          this.searchPatient.Gender = Patient.gender;
+          this.searchPatient.PatientId = Patient.id;
+          this.PatientList.push(this.searchPatient);
+        });
+
+    }, err => {
+      console.log(err);
+      });
+
+   
+ 
+       
+        
+    
   }
+
+  
   
 }

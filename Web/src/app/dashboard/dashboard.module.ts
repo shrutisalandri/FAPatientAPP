@@ -1,3 +1,4 @@
+/// <reference path="../shared/services/patient.service.ts" />
 /// <reference path="../searchpatient/searchpatient.component.ts" />
 import {
   AutoCompleteModule,
@@ -11,10 +12,10 @@ import {
   DialogModule
 } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Dashboard } from './dashboard.component';
+import { DashboardComponent } from './dashboard.component';
 import { DashBoardService } from './dashboard.service';
-import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { NgModule } from '@angular/core';
@@ -24,7 +25,7 @@ import { NgaModule } from '../layout/nga.module';
 import { PatientComponent } from '../Patient';
 import { SearchPatientComponent } from '../searchpatient';
 import { SearchBookingComponent } from '../searchbooking';
-
+import {PatientService } from '../shared/services/patient.service';
 
 @NgModule({
   imports: [
@@ -41,16 +42,18 @@ import { SearchBookingComponent } from '../searchbooking';
     MessagesModule,
     GrowlModule,
     DialogModule,
-    NgaModule
+    NgaModule,
+    ReactiveFormsModule
   ],
   declarations: [
-    Dashboard,
+    DashboardComponent,
     PatientComponent,
     SearchPatientComponent,
     SearchBookingComponent
   ],
   providers: [
-    DashBoardService
+    DashBoardService,
+    PatientService
   ]
 })
 export class DashboardModule { }

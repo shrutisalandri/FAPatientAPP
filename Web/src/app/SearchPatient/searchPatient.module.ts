@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { SearchPatientComponent } from './searchpatient.component';
 import { DataTableModule, SharedModule } from 'primeng/primeng';
+import { PatientService } from '../shared/services/patient.service'
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { DataTableModule, SharedModule } from 'primeng/primeng';
     SearchPatientComponent
   ],
   providers: [
+    PatientService
     
   ],
   exports: [

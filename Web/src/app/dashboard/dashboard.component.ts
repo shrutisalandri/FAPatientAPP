@@ -18,7 +18,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './dashboard.html',
   animations: [fadeInAnimation, slideInOut]
 })
-export class Dashboard implements OnInit {
+export class DashboardComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private globalEventsManager: GlobalEventsManager,

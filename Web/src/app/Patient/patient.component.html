@@ -24,7 +24,7 @@
               <label class="small-2 columns label-text">Title:</label>
             </div>
             <div class="col-md-4">
-              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.Title" />
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.title" />
             </div>
           </div>
           <div class="row form-group" style="padding-top:5px">
@@ -32,7 +32,7 @@
               <label class="small-2 columns label-text">First Name:</label>
             </div>
             <div class="col-md-4">
-              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.FirstName" />
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.firstName" />
             </div>
           </div>
           <div class="row form-group" style="padding-top:5px">
@@ -42,7 +42,7 @@
               </label>
             </div>
             <div class="col-md-4">
-              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.LastName" />
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.lastName" />
             </div>
           </div>
           <div class="row form-group" style="padding-top:5px">
@@ -57,9 +57,9 @@
             <div class="col-md-4">
               <label class="small-2 columns label-text">Gender:</label>
             </div>
-            <div class="col-md-1">
-              <input type="radio" name="gender" value='Male' [(ngModel)]="patientDetails.Gender">Male
-              <input type="radio" name='gender' value='Female' [(ngModel)]="patientDetails.Gender">Female
+            <div class="col-md-4" style="text-align:left;">
+              <input type="radio" name="gender" value='Male' [(ngModel)]="patientDetails.gender==M">Male
+              <input type="radio" name='gender' value='Female' [(ngModel)]="patientDetails.gender==F">Female
             </div>
           </div>
         </div>
@@ -84,7 +84,7 @@
               <label class="small-2 columns label-text">Email:</label>
             </div>
             <div class="col-md-4">
-              <input autocomplete="off" class="form-control" type="email" [(ngModel)]="patientDetails.Email" />
+              <input autocomplete="off" class="form-control" type="email" [(ngModel)]="patientDetails.email" />
             </div>
           </div>
           <div class="row form-group" style="padding-top:5px">
@@ -107,7 +107,7 @@
               <label class="small-2 columns label-text">Residential Address</label>
             </div>
             <div class="col-md-4">
-              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.ResidentialAddress.Address" />
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.residentialAddress" />
             </div>
           </div>
           <div class="row form-group" style="padding-top:5px">
@@ -115,7 +115,7 @@
               <label class="small-2 columns label-text">Residential Suburb</label>
             </div>
             <div class="col-md-4">
-              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.ResidentialAddress.Suburb" />
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.residentialSuburb" />
             </div>
           </div>
           <div class="row form-group" style="padding-top:5px">
@@ -123,7 +123,7 @@
               <label class="small-2 columns label-text">Residential Postcode</label>
             </div>
             <div class="col-md-4">
-              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.ResidentialAddress.Postcode" />
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.residentialPostCode" />
             </div>
           </div>
           <div class="row form-group" style="padding-top:5px">
@@ -131,7 +131,7 @@
               <label class="small-2 columns label-text">Residential State</label>
             </div>
             <div class="col-md-4">
-              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.ResidentialAddress.State" />
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.residentialState" />
             </div>
           </div>
           <div class="row form-group" style="padding-top:5px">
@@ -139,17 +139,17 @@
               <label class="small-2 columns label-text">Is your Postal Address same as Residential?</label>
             </div>
             <div class="col-md-4" style="text-align: left;">
-              <input type="checkbox" [(ngModel)]="patientDetails.PostAddressSameAsResidentialAddress" style="height:20px">
+              <input type="checkbox" [(ngModel)]="patientDetails.postAddressSameAsResidentialAddress" style="height:20px">
               <!--<p-inputSwitch [(ngModel)]="checked"></p-inputSwitch>-->
             </div>
           </div>
-          <div *ngIf="!patientDetails.PostAddressSameAsResidentialAddress">
+          <div *ngIf="!patientDetails.postAddressSameAsResidentialAddress">
             <div class="row form-group" style="padding-top:5px">
               <div class="col-md-4">
                 <label class="small-2 columns label-text">Postal Address</label>
               </div>
               <div class="col-md-4">
-                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.PostalAddress.Address" />
+                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.postalAddress" />
               </div>
             </div>
             <div class="row form-group" style="padding-top:5px">
@@ -157,7 +157,7 @@
                 <label class="small-2 columns label-text">Postal Suburb</label>
               </div>
               <div class="col-md-4">
-                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.PostalAddress.Suburb" />
+                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.postalSuburb" />
               </div>
             </div>
             <div class="row form-group" style="padding-top:5px">
@@ -165,7 +165,7 @@
                 <label class="small-2 columns label-text">Postal Postcode</label>
               </div>
               <div class="col-md-4">
-                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.PostalAddress.Postcode" />
+                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.postalPostCode" />
               </div>
             </div>
             <div class="row form-group" style="padding-top:5px">
@@ -173,7 +173,7 @@
                 <label class="small-2 columns label-text">Postal State</label>
               </div>
               <div class="col-md-4">
-                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.PostalAddress.State" />
+                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.postalState" />
               </div>
             </div>
           </div>
@@ -194,16 +194,16 @@
               </label>
             </div>
             <div class="col-md-4" style="text-align:left">
-              <input type="checkbox" [(ngModel)]="patientDetails.HasHealthFund" style="height:20px">
+              <input type="checkbox" [(ngModel)]="patientDetails.hasHealthFund" style="height:20px">
             </div>
           </div>
-          <div *ngIf="!patientDetails.HasHealthFund">
+          <div *ngIf="!patientDetails.hasHealthFund">
             <div class="row form-group" style="padding-top:5px">
               <div class="col-md-4">
                 <label class="small-2 columns label-text">Private Health Fund Name:</label>
               </div>
               <div class="col-md-4">
-                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.PrivateHealthFund.FundName" />
+                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.healthFundName" />
               </div>
             </div>
             <div class="row form-group" style="padding-top:5px">
@@ -211,7 +211,7 @@
                 <label class="small-2 columns label-text">Private Health Fund Member Number:</label>
               </div>
               <div class="col-md-4">
-                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.PrivateHealthFund.FundMemberNumber" />
+                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.healthFundMemberNumber" />
               </div>
             </div>
             <div class="row form-group" style="padding-top:5px">
@@ -219,7 +219,7 @@
                 <label class="small-2 columns label-text">Private Heatlh Fund Refreence Number:</label>
               </div>
               <div class="col-md-4">
-                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.PrivateHealthFund.FundRefreenceNumber" />
+                <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.healthFundReferenceNumber" />
               </div>
             </div>
 
@@ -229,7 +229,7 @@
               <label class="small-2 columns label-text">Medicare Member Number:</label>
             </div>
             <div class="col-md-4">
-              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.MedicareMemberNumber" />
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.medicareMemberNumber" />
             </div>
           </div>
           <div class="row form-group" style="padding-top:5px">
@@ -237,7 +237,7 @@
               <label class="small-2 columns label-text">Meidcare Reference Number:</label>
             </div>
             <div class="col-md-4">
-              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.MeidcareReferenceNumber" />
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.medicareExpiryDate" />
             </div>
           </div>
           <div class="row form-group" style="padding-top:5px">
@@ -245,7 +245,7 @@
               <label class="small-2 columns label-text">Medicare Expiry Date:</label>
             </div>
             <div class="col-md-1">
-              <p-calendar [(ngModel)]="patientDetails.MedicareExpiryDate"></p-calendar>
+              <p-calendar [(ngModel)]="patientDetails.medicareExpiryDate"></p-calendar>
             </div>
           </div>
           <div class="row form-group" style="padding-top:5px">
@@ -253,7 +253,7 @@
               <label class="small-2 columns label-text">DVA Pension Number:</label>
             </div>
             <div class="col-md-4">
-              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.DVAPensionNumber" />
+              <input autocomplete="off" class="form-control" type="text" [(ngModel)]="patientDetails.dvaPensionNumber" />
             </div>
           </div>
         </div>

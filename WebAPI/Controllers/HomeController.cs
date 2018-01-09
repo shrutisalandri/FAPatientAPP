@@ -8,9 +8,12 @@ using Unity;
 using Unity.Resolution;
 using Microsoft.Extensions.Configuration;
 using BusinessModels.DTOS;
+using Microsoft.AspNetCore.Cors;
 
 namespace WebAPI.Controllers
 {
+    [EnableCors("CorsPolicy")]
+    //[Produces("application/json")]   
 
     [Produces("application/json")]
     public class HomeController : BaseController
