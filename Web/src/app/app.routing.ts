@@ -1,3 +1,5 @@
+/// <reference path="dashboard/dashboard.component.ts" />
+/// <reference path="dashboard/index.ts" />
 import { ErrorPageComponent } from './layout/components/error-page/error-page.component';
 import { Routes, RouterModule } from '@angular/router';
 

@@ -2,8 +2,7 @@
 import * as _ from 'lodash';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
 
-import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
-
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 import {
@@ -16,8 +15,8 @@ import {
 import { fadeInAnimation, slideInOut } from '../layout/animations/shared-animations';
 import { GlobalEventsManager } from '../shared/utilities/global-events-manager';
 import { HttpClient } from '@angular/common/http';
-import { Patient, Address, HealthFund } from '../shared/models/patient';
-
+import { Patient} from '../shared/models/patient';
+import { PatientService } from '../shared/services/patient.service'
 
 @Component({
   templateUrl: './patient.component.html',
@@ -30,26 +29,28 @@ import { Patient, Address, HealthFund } from '../shared/models/patient';
 export class PatientComponent implements OnInit {
   public patientDetails: Patient = new Patient();
   value: Date;
+  //heroForm: FormGroup;
+
   
   checked: boolean;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
-    
-    this.patientDetails.ResidentialAddress = new Address();
-    this.patientDetails.PostalAddress = new Address();
-    this.patientDetails.PrivateHealthFund = new HealthFund();
-    this.patientDetails.HasHealthFund = true;
-    this.patientDetails.PostAddressSameAsResidentialAddress = true;
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private fb: FormBuilder, private patientService: PatientService) {
+    //this.heroForm = this.fb.group({
+    //  name: '', // <--- the FormControl called "name"
+    //});
+    //this.patientDetails.ResidentialAddress = new Address();
+    //this.patientDetails.postalAddress = new Address();
+    //this.patientDetails.PrivateHealthFund = new HealthFund();
+    //this.patientDetails.hasHealthFund = true;
+    //this.patientDetails.postAddressSameAsResidentialAddress = true;
   }
   ngOnInit() {
-    var queryParam = this.activatedRoute.snapshot.queryParams["PatientID"];
 
-    if (queryParam != null && queryParam.length > 0) {
-      this.patientDetails.Title = "title";
-      this.patientDetails.FirstName = "FirstName";
-      this.patientDetails.LastName = "LastName";
-    }
+    var PatientID = this.activatedRoute.snapshot.queryParams["PatientID"];
 
+    let pa = this.patientService.get();
+
+    this.patientDetails = pa.find(x => x.id == PatientID);
   }
 
    public SubmitPatient() {

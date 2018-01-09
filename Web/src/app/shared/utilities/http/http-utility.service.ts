@@ -1,4 +1,5 @@
-﻿import { ResponseContentType } from '@angular/http';
+/// <reference path="../../models/patient.ts" />
+import { ResponseContentType } from '@angular/http';
 import { Config } from '../config';
 import { GlobalEventsManager } from '../global-events-manager';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
@@ -10,6 +11,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/finally';
 import 'rxjs/add/operator/concatAll';
 import 'rxjs/add/operator/shareReplay';
+import { Patient } from '../../models/patient';
 
 @Injectable()
 export class HttpUtility {
@@ -56,6 +58,11 @@ export class HttpUtility {
     public delete(url: string, options?: HttpParams) {
         return this.http.delete(this.getApiUrl(url))
             .catch((e) => this.handleError(e));
+    }
+
+    public getParams(url: string, options?: HttpParams) {
+
+      return this.http.get<Patient[]>(this.getApiUrl(url), { params: options });
     }
     /**
      * get
