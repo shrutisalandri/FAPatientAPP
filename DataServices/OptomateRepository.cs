@@ -13,70 +13,75 @@ namespace DataServices
 {
     public class OptomateRepository : IRepository
     {
-        readonly string _connString;
-        readonly int _retries = 0;
-        readonly int _commandTimeout = 0;
+        private readonly string _connString;
+        private readonly int _retries = 0;
+        private readonly int _commandTimeout = 0;
 
-        public const string SetPassWordQuery = "SET PASSWORDS ADD '6!6@6#5$3%9' ;";
+        private const string SetPassWordQuery = "SET PASSWORDS ADD '6!6@6#5$3%9' ;";
 
+        private const string UpdatePatientQuery = @"UPDATE CLIENT
+                                                   SET Title=?Title?,GIVEN=?Given?,SURNAME=?Surname?,
+                                                   ADDRESS1=?Address1?,SUBURB=?Suburb?,STATE=?State?,POSTCODE=?Postcode?,
+                                                   PHONE_AH=?Phone_Ah?,PHONE_MOB=?Phone_Mob?,EMAIL=?Email?,BIRTHDATE=?BirthDate?,
+                                                   Sex=?Sex?,Medicare=?Medicare?, MedRef=?MedRef?,Expiry=?Expiry?, 
+                                                   HealthFund=?HealthFund?,MemberNum=?MemberNum?, IsInActive=?IsInActive?
+                                                   WHERE NUMBER=?PatientId?";
 
-        public const int InsertIntoAppNexusMaxAttempts = 3;
-
-        public const string SelectAppointmentNextId = @"select COALESCE(LastAppNum,0)+1 FROM GenerateNumbers";
-
-        public const string SelectAppointmentNexusCount = @"SELECT count(ID) from AppNexus WHERE ID = ?nextId?";
-
-        public const string SetNextAppointmentNextId = @"update GenerateNumbers SET LastAppNum = ?nextId?";
-
-
-
-
-        public const string InsertPatientQuery = @"INSERT INTO CLIENT (NUMBER,GIVEN,SURNAME,ADDRESS1,SUBURB,STATE,POSTCODE,PHONE_AH,PHONE_MOB,EMAIL,BIRTHDATE) 
-                                                   VALUES(?Number?, ?Given?, ?Surname?, ?Address1?, ?Suburb?, ?State?, ?Postcode?, ?Phone_Ah?, ?Phone_Mob?, ?Email?, ?BirthDate? );";
-
-        public const string GetAppointmentsQuery = @"SELECT  Id,""start"",""finish"", apptype, APPNEXUS.Branch, Optom,
-                                                   ClientNum, Given, Surname, BirthDate, Title, Sex
-                                                   FROM APPNEXUS
-                                                   JOIN Client ON APPNEXUS.clientnum=Client.number
-                                                   WHERE CAST(""start"" as date) >=CAST(?start? AS DATE) AND 
-                                                   CAST(""finish"" as date) <=CAST(?finish? AS DATE)";
-
-        public const string GetAppointmentQuery = @"SELECT  Id,""start"",""finish"", apptype, APPNEXUS.Branch, Optom,
-                                                   ClientNum, Given, Surname, BirthDate, Title, Sex
-                                                   FROM APPNEXUS
-                                                   JOIN Client ON APPNEXUS.clientnum=Client.number
-                                                   WHERE ID=?bookingId?";
+        private const string InsertPatientQuery = @"INSERT INTO CLIENT (NUMBER,Title,GIVEN,SURNAME,ADDRESS1,SUBURB,STATE,POSTCODE,PHONE_AH,
+                                                    PHONE_MOB,EMAIL,BIRTHDATE,Sex, Medicare, MedRef, Expiry,  HealthFund,
+                                                    MemberNum, IsInActive) 
+                                                    VALUES(?Number?,?Title?, ?Given?, ?Surname?, ?Address1?, ?Suburb?, ?State?,
+                                                    ?Postcode?, ?Phone_Ah?, ?Phone_Mob?, ?Email?, ?BirthDate?,
+                                                    ?Sex?,?Medicare?,?MedRef?,?Expiry?,?HealthFund?,?MemberNum?,?IsInActive?);";
 
 
-        public const string GetPatientQuery = @"SELECT Number, Title, Given, Surname, Address1, Suburb, State,
-                                                Postcode, Phone_Ah, Phone_Mob, Email, BirthDate,
-                                                Sex, Medicare, MedRef, Expiry, BenefitNum, HealthFund,
-                                                MemberNum, IsInActive
-                                                FROM CLIENT 
-                                                WHERE NUMBER =?patientId?";
+        private const string GetAppointmentsQuery = @"SELECT  Id,""start"",""finish"", apptype, APPNEXUS.Branch, Optom,
+                                                     ClientNum, Given, Surname, BirthDate, Title, Sex
+                                                     FROM APPNEXUS
+                                                     JOIN Client ON APPNEXUS.clientnum=Client.number
+                                                     WHERE CAST(""start"" as date) >=CAST(?start? AS DATE) AND 
+                                                     CAST(""finish"" as date) <=CAST(?finish? AS DATE)";
 
-        public const string GetPatientsQuery = @"SELECT Number, Title, Given, Surname, Address1, Suburb, State,
-                                                Postcode, Phone_Ah, Phone_Mob, Email, BirthDate,
-                                                Sex, Medicare, MedRef, Expiry, BenefitNum, HealthFund,
-                                                MemberNum, IsInActive
-                                                FROM CLIENT
-                                                WHERE (IsInActive IS NULL OR IsInActive =false )";
-
-        public const string GetPatientsSearchQuery = @"SELECT Number, Title, Given, Surname, Address1, Suburb, State,
-                                                Postcode, Phone_Ah, Phone_Mob, Email, BirthDate,
-                                                Sex, Medicare, MedRef, Expiry, BenefitNum, HealthFund,
-                                                MemberNum, IsInActive
-                                                FROM CLIENT 
-                                                WHERE (IsInActive IS NULL OR IsInActive = false ) AND";
-
-        public const string SelectClientNextId = @"SELECT COALESCE(LASTPATNUM,0)+1 FROM GenerateNumbers ";
-
-        public const string SetClientNextIdQuery = @"UPDATE GenerateNumbers SET LASTPATNUM = ?nextClientId?";
-
-        public const string SelectClientCount = @"SELECT count(number) from Client WHERE number = ?nextClientId?;";
+        private const string GetAppointmentQuery = @"SELECT  Id,""start"",""finish"", apptype, APPNEXUS.Branch, Optom,
+                                                     ClientNum, Given, Surname, BirthDate, Title, Sex
+                                                     FROM APPNEXUS
+                                                     JOIN Client ON APPNEXUS.clientnum=Client.number
+                                                     WHERE ID=?bookingId?";
 
 
-        int ExecConn(string sql, object sqlParams = null)
+        private const string GetPatientQuery = @"SELECT Number, Title, Given, Surname, Address1, Suburb, State,
+                                                 Postcode, Phone_Ah, Phone_Mob, Email, BirthDate,
+                                                 Sex, Medicare, MedRef, Expiry, BenefitNum, HealthFund,
+                                                 MemberNum, IsInActive
+                                                 FROM CLIENT 
+                                                 WHERE NUMBER =?patientId?";
+
+        private const string GetPatientsQuery = @"SELECT Number, Title, Given, Surname, Address1, Suburb, State,
+                                                  Postcode, Phone_Ah, Phone_Mob, Email, BirthDate,
+                                                  Sex, Medicare, MedRef, Expiry, BenefitNum, HealthFund,
+                                                  MemberNum, IsInActive
+                                                  FROM CLIENT
+                                                  WHERE (IsInActive IS NULL OR IsInActive =false )";
+
+        private const string GetPatientsSearchQuery = @"SELECT Number, Title, Given, Surname, Address1, Suburb, State,
+                                                        Postcode, Phone_Ah, Phone_Mob, Email, BirthDate,
+                                                        Sex, Medicare, MedRef, Expiry, BenefitNum, HealthFund,
+                                                        MemberNum, IsInActive
+                                                        FROM CLIENT 
+                                                        WHERE (IsInActive IS NULL OR IsInActive = false ) AND";
+
+        private const string SelectClientNextId = @"SELECT COALESCE(LASTPATNUM,0)+1 FROM GenerateNumbers ";
+
+        private const string SetClientNextIdQuery = @"UPDATE GenerateNumbers SET LASTPATNUM = ?nextClientId?";
+
+        private const string SelectClientCount = @"SELECT count(number) from Client WHERE number = ?nextClientId?;";
+
+        public OptomateRepository(string ConnectionString)
+        {
+            _connString = ConnectionString;
+        }
+
+        private int ExecConn(string sql, object sqlParams = null)
         {
             // Nexus expects timeout in milliseconds, whereas .net command expects seconds
             var sqlWithTimeout = _commandTimeout != 0 ? $"#t {_commandTimeout * 1000}; {sql}" : sql;
@@ -88,12 +93,7 @@ namespace DataServices
             }
         }
 
-        public OptomateRepository(string ConnectionString)
-        {
-            _connString = ConnectionString;
-        }
-
-        IEnumerable<T> QueryConn<T>(string sql, object sqlParams = null) where T : class
+        private IEnumerable<T> QueryConn<T>(string sql, object sqlParams = null) where T : class
         {
             // Nexus expects timeout in milliseconds, whereas .net command expects seconds
             var sqlWithTimeout = _commandTimeout != 0 ? $"#t {_commandTimeout * 1000}; {sql}" : sql;
@@ -147,61 +147,86 @@ namespace DataServices
         public int InsertPatient(CommonPatient patient)
         {
 
-            bool success = false;
-            int nextId = 0;
             int rowsrfected = 0;
-            for (int i = 1; i <= InsertIntoAppNexusMaxAttempts; i++)
+            int nextId = GetClientNextId();
+            int recordsWithNextId = GetClientCount(nextId);
+
+            while (recordsWithNextId > 0)
             {
-                if (!success)
-                {
-                    nextId = GetClientNextId();
-                    if (nextId <= 0)
-                    {
-                        continue;
-                    }
-                    int numOfRecordsWithId = GetClientCount(nextId);
-                    while (numOfRecordsWithId > 0)
-                    {
-                        nextId = nextId + 1;
-                        numOfRecordsWithId = GetClientCount(nextId);
-                    }
-                    var nextIdSet = SetClientNextId(nextId);
-                    if (!nextIdSet)
-                    {
-                        continue;
-                    }
-
-                    OptomatePatient newPatient = new OptomatePatient()
-                    {
-                        Number = nextId,
-                        Given = patient.FirstName,
-                        Surname = patient.LastName,
-                        Address1 = patient.ResidentialAddress,
-                        Suburb = patient.ResidentialSuburb,
-                        State = patient.ResidentialState,
-                        Postcode = patient.ResidentialPostCode,
-                        Phone_Ah = patient.Phone,
-                        Phone_Mob = patient.Mobile,
-                        Email = patient.Email,
-                        BirthDate = patient.DateOfBirth,
-
-                    };
-
-                    rowsrfected = ExecConn($"{SetPassWordQuery} {InsertPatientQuery}", patient);
-
-                    if (rowsrfected > 0)
-                        success = true;
-                }
+                nextId = nextId + 1;
+                recordsWithNextId = GetClientCount(nextId);
             }
 
-            //ToDo : Implement patient id value return
-            return 0;
+            bool nextIdSet = SetClientNextId(nextId);
 
+            OptomatePatient newPatient = new OptomatePatient()
+            {
+                Number = nextId,
+                Given = patient.FirstName,
+                Surname = patient.LastName,
+                Address1 = patient.ResidentialAddress,
+                Suburb = patient.ResidentialSuburb,
+                State = patient.ResidentialState,
+                Postcode = patient.ResidentialPostCode,
+                Phone_Ah = patient.Phone,
+                Phone_Mob = patient.Mobile,
+                Email = patient.Email,
+                BirthDate = patient.DateOfBirth,
+                Title = patient.Title,
+                Sex = patient.Gender,
+                IsInActive = false,
+                HealthFund = patient.HealthFundName,
+                MemberNum = patient.HealthFundMemberNumber,
+                Medicare = patient.MedicareMemberNumber,
+                MedRef = patient.MeidcareReferenceNumber,
+                Expiry = patient.MedicareExpiryDate?.ToString()
+            };
+
+            rowsrfected = ExecConn($"{SetPassWordQuery} {InsertPatientQuery}", newPatient);
+
+            if (rowsrfected > 0)
+            {
+                return nextId;
+            }
+
+            return 0;
         }
 
         public bool UpdatePatient(CommonPatient patient)
         {
-            throw new NotImplementedException();
+            var sqlParams = new
+            {
+                PatientId = patient.Id,
+                Title = patient.Title,
+                Given = patient.FirstName,
+                Surname = patient.LastName,
+                BirthDate = patient.DateOfBirth,
+                Address1 = patient.ResidentialAddress,
+                Suburb = patient.ResidentialSuburb,
+                State = patient.ResidentialState,
+                Postcode = patient.ResidentialPostCode,
+                Phone_Mob = patient.Mobile,
+                Email = patient.Email,
+                Phone_Ah = patient.Phone,
+                Sex = patient.Gender,
+                IsInActive = patient.InActive,
+                HealthFund = patient.HealthFundName,
+                MemberNum = patient.HealthFundMemberNumber,
+                Medicare = patient.MedicareMemberNumber,
+                MedRef = patient.MeidcareReferenceNumber,
+                Expiry = patient.MedicareExpiryDate?.ToString(),
+
+                //HealthFundRefNo = patient.HealthFundReferenceNumber,
+                //NoHealthFund = !patient.HasHealthFund,
+                //DVANumber = patient.DVAPensionNumber,
+                //PostalAddress = patient.PostalAddress,
+                //PostalSuburb = patient.PostalSuburb,
+                //PostalState = patient.PostalState,
+                //PostalPostCode = patient.PostalPostCode,
+
+            };
+
+            return ExecConn($"{SetPassWordQuery} {UpdatePatientQuery}", sqlParams) > 0;
         }
 
         public List<CommonPatient> SearchPatients(int patientId, string firstName, string lastName)
@@ -237,36 +262,6 @@ namespace DataServices
             return ToCommonPatients(QueryConn<OptomateTouchPatient>(query, sqlParams));
         }
 
-        private int GetAppointmentNextId()
-        {
-            try
-            {
-                int result = 0;
-                string maxCode = QueryConn<string>(SelectAppointmentNextId)?.FirstOrDefault();
-                Int32.TryParse(maxCode, out result);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-        private int GetAppointmentNexusCount(int Id)
-        {
-            try
-            {
-                var sqlParams = new { nextId = Id };
-
-                int result = 0;
-                string maxCode = QueryConn<string>(SelectAppointmentNexusCount, sqlParams)?.FirstOrDefault();
-                Int32.TryParse(maxCode, out result);
-                return result;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
         private int GetClientNextId()
         {
             int result = 0;
@@ -293,16 +288,6 @@ namespace DataServices
             return ExecConn(SetClientNextIdQuery, sqlParams) > 0;
 
         }
-
-        private bool SetAppointmentNextId(int Id)
-        {
-            var sqlParams = new { nextId = Id };
-
-            return ExecConn(SetNextAppointmentNextId, sqlParams) > 0;
-
-        }
-
-
 
 
         private List<CommonPatient> ToCommonPatients(IEnumerable<OptomatePatient> optomateTouchPatients)
@@ -331,8 +316,14 @@ namespace DataServices
 
         private CommonPatient ToCommonPatient(OptomatePatient optomatePatient)
         {
+            if (optomatePatient == null)
+            {
+                return null;
+            }
+
             return new CommonPatient()
             {
+                Id = optomatePatient.Number,
                 Title = optomatePatient.Title,
                 FirstName = optomatePatient.Given,
                 LastName = optomatePatient.Surname,
@@ -366,6 +357,12 @@ namespace DataServices
 
         private CommonAppointment ToCommonAppointment(OptomateAppointment optomateAppointment)
         {
+
+            if (optomateAppointment == null)
+            {
+                return null;
+            }
+
             return new CommonAppointment()
             {
                 StartDate = optomateAppointment.Start,
@@ -375,7 +372,6 @@ namespace DataServices
                 UserIdentifier = optomateAppointment.Optom,
                 AppointmentType = optomateAppointment.Apptype,
                 PatientId = optomateAppointment.ClientNum,
-                //Duration = optomateAppointment.Duration,
                 FirstName = optomateAppointment.Given,
                 LastName = optomateAppointment.Surname,
                 BirthDate = optomateAppointment.BirthDate,

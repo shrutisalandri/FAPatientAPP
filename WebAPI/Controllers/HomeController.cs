@@ -9,24 +9,29 @@ using Unity.Resolution;
 using Microsoft.Extensions.Configuration;
 using BusinessModels.DTOS;
 using Microsoft.AspNetCore.Cors;
+using Serilog;
 
 namespace WebAPI.Controllers
 {
-    [EnableCors("CorsPolicy")]
-    //[Produces("application/json")]   
 
+    [EnableCors("CorsPolicy")]
     [Produces("application/json")]
     public class HomeController : BaseController
     {
         IPatientService _patientService;
         IConfiguration _configuration;
         string _connectionString = string.Empty;
+        ILogger logger;
 
         public HomeController(IConfiguration configuration)
         {
             _configuration = configuration;
+            logger = new LoggerConfiguration().WriteTo.File("log-.txt", rollingInterval: RollingInterval.Day)
+                          .CreateLogger();
         }
 
+
+        [HttpGet]
         [HttpGet]
         [Route("api/GetPatients")]
         public List<CommonPatient> GetPatients(string PMS)
@@ -40,14 +45,14 @@ namespace WebAPI.Controllers
                     _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
                                       {
                                        new ParameterOverride("ConnectionString",_connectionString )
-                                      }));
+                                      }), logger);
 
                     return _patientService.GetPatients();
                 }
             }
             catch (Exception ex)
             {
-                //log
+                Log.Error(ex.Message);
             }
 
             return null;
@@ -67,14 +72,14 @@ namespace WebAPI.Controllers
                     _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
                                       {
                                        new ParameterOverride("ConnectionString",_connectionString )
-                                      }));
+                                      }), logger);
 
                     return _patientService.SearchPatients(patientId, firstName, lastName);
                 }
             }
             catch (Exception ex)
             {
-                //log
+                Log.Error(ex.Message);
             }
 
             return null;
@@ -94,7 +99,7 @@ namespace WebAPI.Controllers
                     _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
                                       {
                                        new ParameterOverride("ConnectionString", _connectionString)
-                                      }));
+                                      }), logger);
 
                     return _patientService.GetPatient(Id);
 
@@ -102,7 +107,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                //log
+                Log.Error(ex.Message);
             }
 
             return null;
@@ -125,7 +130,7 @@ namespace WebAPI.Controllers
                     _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
                                       {
                                        new ParameterOverride("ConnectionString",_connectionString )
-                                      }));
+                                      }), logger);
 
                     return _patientService.GetAppointments(startDate, endDate);
 
@@ -133,7 +138,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                //log
+                Log.Error(ex.Message);
             }
 
             return null;
@@ -153,7 +158,7 @@ namespace WebAPI.Controllers
                     _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
                                       {
                                        new ParameterOverride("ConnectionString", _connectionString)
-                                      }));
+                                      }), logger);
 
                     return _patientService.GetAppointment(Id);
 
@@ -161,7 +166,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                //log
+                Log.Error(ex.Message);
             }
 
             return null;
@@ -175,20 +180,21 @@ namespace WebAPI.Controllers
         {
             try
             {
+
                 if (!string.IsNullOrEmpty(PMS))
                 {
                     _connectionString = _configuration.GetValue<string>("ConnectionStrings:" + PMS);
                     _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
                                       {
                                        new ParameterOverride("ConnectionString", _connectionString)
-                                      }));
-
+                                      }), logger);
+                   
                     return _patientService.InsertPatient(patient);
                 }
             }
             catch (Exception ex)
             {
-                //log
+                Log.Error(ex.Message);
             }
 
             return 0;
@@ -207,14 +213,14 @@ namespace WebAPI.Controllers
                     _patientService = new PatientService(myContainer.Resolve<IRepository>(PMS, new ResolverOverride[]
                                       {
                                        new ParameterOverride("ConnectionString", _connectionString)
-                                      }));
+                                      }), logger);
 
-                    return _patientService.UpdatePatient(patient);
+                                      return _patientService.UpdatePatient(patient);
                 }
             }
             catch (Exception ex)
             {
-                //log
+                Log.Error(ex.Message);
             }
 
             return false;

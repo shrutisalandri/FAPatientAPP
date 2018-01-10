@@ -43,7 +43,7 @@ namespace BusinessModels
 
         public string MemberNum { get; set; }
 
-        public string IsInActive { get; set; }
+        public bool IsInActive { get; set; }
 
     }
 }

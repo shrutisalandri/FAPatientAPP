@@ -6,31 +6,30 @@ using System.Data.SqlClient;
 using BusinessModels;
 using System.Linq;
 using BusinessModels.DTOS;
-using Newtonsoft.Json;
 using System.Dynamic;
 
 namespace DataServices
 {
     public class OptomateTouchRepository : IRepository
     {
-        readonly string _connString;
-        readonly int _retries = 0;
+        private readonly string _connString;
+        private readonly int _retries = 0;
 
-        const string GetAppointmentQuery = @"SELECT APP.[ID], [STARTDATE] as StartDate,
+        private const string GetAppointmentQuery = @"SELECT APP.[ID], [STARTDATE] as StartDate,
              [ENDDATE] AS EndDate, APP.[BRANCH_IDENTIFIER] AS BranchIdentifier, APP.[USER_IDENTIFIER] AS UserIdentifier,
              [PATIENTID] AS PatientId, [DURATION] AS Duration,[GIVEN] AS FirstName, [SURNAME] AS LastName, [BIRTHDATE] AS BirthDate, [TITLE] AS  Title, [GENDER] AS Gender
              FROM [dbo].[APPOINTMENT] APP WITH(NOLOCK)
 			 JOIN [dbo].[PATIENT] PA WITH(NOLOCK) ON PA.ID = APP.PATIENTID
              WHERE APP.[ID] = @appointmentId";
 
-        const string GetAppointmentsQuery = @"SELECT APP.[ID], [STARTDATE] as StartDate,
+        private const string GetAppointmentsQuery = @"SELECT APP.[ID], [STARTDATE] as StartDate,
              [ENDDATE] AS EndDate, APP.[BRANCH_IDENTIFIER] AS BranchIdentifier, APP.[USER_IDENTIFIER] AS UserIdentifier,
              [PATIENTID] AS PatientId, [DURATION] AS Duration,[GIVEN] AS FirstName, [SURNAME] AS LastName, [BIRTHDATE] AS BirthDate, [TITLE] AS  Title, [GENDER] AS Gender
              FROM [dbo].[APPOINTMENT] APP WITH(NOLOCK)
 			 JOIN [dbo].[PATIENT] PA WITH(NOLOCK) ON PA.ID = APP.PATIENTID
             WHERE STARTDATE >= @StartDate AND ENDDATE <= @EndDate";
 
-        const string InsertPatientQuery = @"INSERT INTO [dbo].[PATIENT]
+        private const string InsertPatientQuery = @"INSERT INTO [dbo].[PATIENT]
             ([DATE_ADDED], [USER_ADDED], [TIMESTMP], [TITLE], [GIVEN], [SURNAME], [BIRTHDATE], [GENDER], [INACTIVE],
              [RESIDENT_ADDRESS], [RESIDENT_SUBURB], [RESIDENT_STATE], [RESIDENT_POSTCODE], [POSTAL_ADDRESS], [POSTAL_SUBURB],
              [POSTAL_STATE], [POSTAL_POSTCODE], [MOBILE_PHONE], [HOME_PHONE],[EMAIL],
@@ -42,7 +41,7 @@ namespace DataServices
             @MedicareRefNo, @MedicareExpiry, @DVANumber);
             SELECT SCOPE_IDENTITY()";
 
-        const string UpdatePatientQuery = @"UPDATE [dbo].[PATIENT]
+        private const string UpdatePatientQuery = @"UPDATE [dbo].[PATIENT]
             SET [USER_EDITED] ='FSTAVAILABLE',[DATE_EDITED] = GetDate(), [TITLE] = @Title, [GIVEN] = @FirstName, [SURNAME] = @LastName, 
             [BIRTHDATE] = @BirthDate,[GENDER] = @Gender, [INACTIVE] = @InActive, [RESIDENT_ADDRESS] = @ResidentAddress,
             [RESIDENT_SUBURB] = @ResidentSuburb, [RESIDENT_STATE] = @ResidentState, [RESIDENT_POSTCODE] = @ResidentPostCode,
@@ -54,7 +53,7 @@ namespace DataServices
             WHERE ID = @PatientId";
 
 
-        const string GetPatientQuery = @"SELECT [ID], [TITLE] AS Title, [GIVEN] AS FirstName, [SURNAME] AS LastName,    
+        private const string GetPatientQuery = @"SELECT [ID], [TITLE] AS Title, [GIVEN] AS FirstName, [SURNAME] AS LastName,    
             [BIRTHDATE] AS BirthDate, [GENDER] AS Gender, [INACTIVE] AS InActive, [RESIDENT_ADDRESS] AS ResidentAddress,
             [RESIDENT_SUBURB] AS ResidentSuburb, [RESIDENT_STATE] AS ResidentState, [RESIDENT_POSTCODE] AS ResidentPostCode,
             [POSTAL_ADDRESS] AS PostalAddress, [POSTAL_SUBURB] AS PostalSuburb, [POSTAL_STATE] AS PostalState, [POSTAL_POSTCODE] AS PostalPostCode,
@@ -65,7 +64,7 @@ namespace DataServices
             FROM [Optomate].[dbo].[PATIENT] WITH(NOLOCK)
             WHERE [ID] = @PatientId";
 
-        const string GetPatientsQuery = @"SELECT [ID], [TITLE] AS Title, [GIVEN] AS FirstName, [SURNAME] AS LastName,    
+        private const string GetPatientsQuery = @"SELECT [ID], [TITLE] AS Title, [GIVEN] AS FirstName, [SURNAME] AS LastName,    
             [BIRTHDATE] AS BirthDate, [GENDER] AS Gender, [INACTIVE] AS InActive, [RESIDENT_ADDRESS] AS ResidentAddress,
             [RESIDENT_SUBURB] AS ResidentSuburb, [RESIDENT_STATE] AS ResidentState, [RESIDENT_POSTCODE] AS ResidentPostCode,
             [POSTAL_ADDRESS] AS PostalAddress, [POSTAL_SUBURB] AS PostalSuburb, [POSTAL_STATE] AS PostalState, [POSTAL_POSTCODE] AS PostalPostCode,
@@ -76,7 +75,7 @@ namespace DataServices
             FROM [Optomate].[dbo].[PATIENT] WITH(NOLOCK) 
             WHERE (INACTIVE IS NULL OR INACTIVE = 0 )";
 
-        const string GetPatientsSearchQuery = @"SELECT [ID], [TITLE] AS Title, [GIVEN] AS FirstName, [SURNAME] AS LastName,    
+        private const string GetPatientsSearchQuery = @"SELECT [ID], [TITLE] AS Title, [GIVEN] AS FirstName, [SURNAME] AS LastName,    
             [BIRTHDATE] AS BirthDate, [GENDER] AS Gender, [INACTIVE] AS InActive, [RESIDENT_ADDRESS] AS ResidentAddress,
             [RESIDENT_SUBURB] AS ResidentSuburb, [RESIDENT_STATE] AS ResidentState, [RESIDENT_POSTCODE] AS ResidentPostCode,
             [POSTAL_ADDRESS] AS PostalAddress, [POSTAL_SUBURB] AS PostalSuburb, [POSTAL_STATE] AS PostalState, [POSTAL_POSTCODE] AS PostalPostCode,
@@ -92,7 +91,7 @@ namespace DataServices
             _connString = ConnectionString;
         }
 
-        IEnumerable<T> QueryConn<T>(string sql, object sqlParams = null) where T : class
+        private IEnumerable<T> QueryConn<T>(string sql, object sqlParams = null) where T : class
         {
             using (var conn = new SqlConnection(_connString))
             {
@@ -101,7 +100,7 @@ namespace DataServices
                 return _retries > 0 ? conn.QueryRobust<T>(sql, sqlParams, retries: _retries) : conn.QueryRobust<T>(sql, sqlParams);
             }
         }
-        int ExecConn(string sql, object sqlParams = null)
+        private int ExecConn(string sql, object sqlParams = null)
         {
             using (var conn = new SqlConnection(_connString))
             {
@@ -110,7 +109,7 @@ namespace DataServices
             }
         }
 
-        int ExecScalarConn(string sql, object sqlParams = null)
+        private int ExecScalarConn(string sql, object sqlParams = null)
         {
             using (var conn = new SqlConnection(_connString))
             {
@@ -287,6 +286,11 @@ namespace DataServices
 
         private CommonPatient ToCommonPatient(OptomateTouchPatient optomatePatient)
         {
+            if (optomatePatient == null)
+            {
+                return null;
+            }
+
             return new CommonPatient()
             {
                 Id = optomatePatient.ID,
@@ -323,6 +327,11 @@ namespace DataServices
 
         private CommonAppointment ToCommonAppointment(OptomateTouchAppointment optomateAppointment)
         {
+            if (optomateAppointment == null)
+            {
+                return null;
+            }
+
             return new CommonAppointment()
             {
                 StartDate = optomateAppointment.StartDate,
