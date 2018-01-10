@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { SearchBookingComponent } from './searchbooking.component';
 import { DataTableModule, SharedModule } from 'primeng/primeng';
+import { BookingService } from '../shared/services/booking.service';
 
 @NgModule({
   imports: [
@@ -22,7 +23,7 @@ import { DataTableModule, SharedModule } from 'primeng/primeng';
     SearchBookingComponent
   ],
   providers: [
-    
+    BookingService
   ],
   exports: [
     SearchBookingComponent

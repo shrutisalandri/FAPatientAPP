@@ -1,13 +1,13 @@
 export class SearchBooking{
-  BookingId: string;
-  Optom: string;
-  Location: string;
-  BookingDate: Date;
-  BookingTime: string;
-  PatientId: string;
-  Title: string;
-  FirstName: string;
-  LastName: string;
-  DoB: Date;
-  Gender: string;
+  iD: string;
+  optom: string;
+  location: string;
+  startDate: Date;
+  endDate: string;
+  patientId: string;
+  title: string;
+  firstName: string;
+  lastName: string;
+  doB: Date;
+  gender: string;
 }

@@ -1,7 +1,9 @@
 /// <reference path="../shared/models/patient.ts" />
+/// <reference path="../shared/services/booking.service.ts" />
 import * as _ from 'lodash';
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
+import { BookingService} from '../shared/services/booking.service';
 
 import {
   Component,
@@ -18,7 +20,7 @@ import { SearchBooking } from '../shared/models/searchBooking';
 
 @Component({
   templateUrl: './searchBooking.component.html',
-  providers: [],
+  providers: [BookingService],
   selector: 'searchBooking',
   animations: [fadeInAnimation, slideInOut]
 })
@@ -26,14 +28,12 @@ import { SearchBooking } from '../shared/models/searchBooking';
 
 export class SearchBookingComponent implements OnInit {
   bookingID: string;
-  FirstName: string;
-  LastName: string;
-  checked: boolean;
+
   
   bookingList: SearchBooking[] = new Array<SearchBooking>();
 
   bookingcols: any[];
-  constructor() {
+  constructor(private _bookingService: BookingService) {
 
     //var queryParam = this._routeParams.get('bookingID');
     //console.log(queryParam);
@@ -43,38 +43,58 @@ export class SearchBookingComponent implements OnInit {
   }
   ngOnInit() {
     this.bookingcols = [
-      { field: 'BookingId', header: 'Booking Id' },
-      { field: 'Optom', header: 'Optom' },
-      { field: 'Location', header: 'Location' },
-      { field: 'BookingDate', header: 'Booking Date' },
-      { field: ' BookingTime', header: ' Booking Time' },
-      { field: 'PatientId', header: 'Patient Id' },
-      { field: 'Title', header: 'Title' },
-      { field: 'FirstName', header: 'First Name' },
-      { field: 'LastName', header: 'Last Name' },
-      { field: 'DOB', header: 'DoB' },
-      { field: 'Gender', header: 'Gender' },
+      { field: 'bookingId', header: 'Booking Id' },
+      { field: 'optom', header: 'Optom' },
+      { field: 'location', header: 'Location' },
+      { field: 'bookingDate', header: 'Booking Date' },
+      { field: ' bookingTime', header: ' Booking Time' },
+      { field: 'patientId', header: 'Patient Id' },
+      { field: 'title', header: 'Title' },
+      { field: 'firstName', header: 'First Name' },
+      { field: 'lastName', header: 'Last Name' },
+      { field: 'doB', header: 'DoB' },
+      { field: 'gender', header: 'Gender' },
     ];
     console.log("sdds");
   }
   
   SearchBooking() {
-    let booking: SearchBooking = new SearchBooking();
-    //booking= new booking();
-    booking.BookingId = "adad";
-    booking.Optom = "Optom";
-    booking.Location = "Location";
-    booking.BookingDate = new Date(Date.now());
-    booking.BookingTime = "BookingTime";
-    booking.Title = "Title";
-    booking.FirstName = "FirstName";
-    booking.LastName = "LastName";
-    booking.DoB = new Date(Date.now());
-    booking.Gender = "F";
-    booking.PatientId = "adad";
-    this.bookingList.push(booking);
-    console.log(this.bookingList.length);
-    console.log(this.bookingList);
+   this._bookingService.getBookings(this.bookingID).subscribe(data => {
+      if (data != null ) {
+                //let searchBooking = new SearchBooking();
+                //searchBooking.bookingId = data.bookingId;
+                //searchBooking.firstName = data.firstName;
+                //searchBooking.lastName = data.lastName;
+                //searchBooking.doB = data.doB;
+                //searchBooking.gender = data.gender;
+                //searchBooking.patientId = data.patientId;
+                //searchBooking.optom = data.optom;
+                //searchBooking.location = data.location;
+                //searchBooking.bookingDate = data.bookingDate;
+                //searchBooking.bookingTime = data.bookingTime;
+                //searchBooking.title = data.title;
+                //this.bookingList.push(searchBooking);
+      }
+    }, err => {
+      console.log(err);
+    });
+
+    //let booking: SearchBooking = new SearchBooking();
+    ////booking= new booking();
+    //booking.bookingId = "adad";
+    //booking.optom = "Optom";
+    //booking.location = "Location";
+    //booking.bookingDate = new Date(Date.now());
+    //booking.bookingTime = "BookingTime";
+    //booking.title = "Title";
+    //booking.firstName = "FirstName";
+    //booking.lastName = "LastName";
+    //booking.doB = new Date(Date.now());
+    //booking.gender = "F";
+    //booking.patientId = "adad";
+    //this.bookingList.push(booking);
+    //console.log(this.bookingList.length);
+    //console.log(this.bookingList);
   }
   
 }

@@ -24,7 +24,7 @@
             <label class="small-2 columns label-text">PatientID:</label>
           </div>
           <div class="col-md-6">
-            <input autocomplete="off" class="form-control" type="number" [(ngModel)]="PatientID" />
+            <input autocomplete="off" class="form-control" type="text" [(ngModel)]="PatientID" />
           </div>
         </div>
         <div class="row form-group small-6 columns" style="padding-top:5px">
@@ -53,7 +53,7 @@
           <p-dataTable [value]="PatientList">
             <p-column *ngFor="let col of Patientcols" [field]="col.field" [header]="col.header">
               <ng-template let-col let-data="rowData" pTemplate="body">
-                <span *ngIf="col.header==='Patient Id'"><a style="color:blue;" routerLink="/Patient" >{{data[col.field]}}</a></span>
+                <span *ngIf="col.header==='Patient Id'"><a style="color:blue;" routerLink="/Patient" [queryParams]="{ PatientID: data[col.field] }" >{{data[col.field]}}</a></span>
                 <span *ngIf="col.header!=='Patient Id'">{{data[col.field]}}</span>
               </ng-template>
             </p-column>

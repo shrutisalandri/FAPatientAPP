@@ -33,30 +33,27 @@ export class PatientService  {
         return items;
         });
     }
- 
-    //return this._http.getParams("/api/GetPatient", params)
-    //  .map((res) => {
-    //    return res;// { Rows: (res.json()).length ? res.json() : undefined };
-    //  });
 
-    //return this._http.getParams("/api/GetPatient", params)
-    //  .takeUntil(this.unsubscribe).map((items: Patient) => {
-    //    this.patient = items;
-    //    return this.patient;
-      //});
-      //.subscribe(
-      //res => {
-      //  console.log(res);
-      //},
-      //err => {
-      //  console.log("Error occured");
-      //}
-      //);
+  public getPatientByID(PatientID: string) {
+    let patient;
+    if (this.patient != null && this.patient.length > 0) {
+      patient = this.patient.find(x => x.id == PatientID);
+      if (patient != null) {
+        return patient;
+      }
+    }
 
-  get() {
+    let httpParams = new HttpParams()
+      .set('PMS', 'OptomateTouch')
+      .set('patientid', PatientID);
 
-    return this.patient;
-  }
+        return this._http.getParams("/api/GetPatient", httpParams)// new HttpParams({ fromString: 'PMS=OptomateTouch&ID='+patientid }))
+          .map((items: Patient) => {
+             return items;
+          });
+      
+    }
+  
   set(data) {
     this.patient = data;
   }

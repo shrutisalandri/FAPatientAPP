@@ -166,6 +166,7 @@
     <TypeScriptCompile Include="src\app\Patient\index.ts" />
     <TypeScriptCompile Include="src\app\Patient\patient.component.ts" />
     <TypeScriptCompile Include="src\app\Patient\patient.module.ts" />
+    <TypeScriptCompile Include="src\app\shared\services\booking.service.ts" />
     <TypeScriptCompile Include="src\app\shared\services\patient.service.ts" />
     <TypeScriptCompile Include="src\app\SearchBooking\index.ts" />
     <TypeScriptCompile Include="src\app\SearchBooking\searchBooking.module.ts" />

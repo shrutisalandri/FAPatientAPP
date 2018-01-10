@@ -35,24 +35,20 @@ export class PatientComponent implements OnInit {
   checked: boolean;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private fb: FormBuilder, private patientService: PatientService) {
-    //this.heroForm = this.fb.group({
-    //  name: '', // <--- the FormControl called "name"
-    //});
-    //this.patientDetails.ResidentialAddress = new Address();
-    //this.patientDetails.postalAddress = new Address();
-    //this.patientDetails.PrivateHealthFund = new HealthFund();
-    //this.patientDetails.hasHealthFund = true;
-    //this.patientDetails.postAddressSameAsResidentialAddress = true;
+
   }
   ngOnInit() {
 
     var PatientID = this.activatedRoute.snapshot.queryParams["PatientID"];
 
-    let pa = this.patientService.get();
+    this.patientDetails = this.patientService.getPatientByID(PatientID);
 
-    this.patientDetails = pa.find(x => x.id == PatientID);
+    
   }
 
-   public SubmitPatient() {
+  public SubmitPatient() {
+
+
+
    }
 }

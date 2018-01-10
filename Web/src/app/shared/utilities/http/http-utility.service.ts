@@ -62,7 +62,7 @@ export class HttpUtility {
 
     public getParams(url: string, options?: HttpParams) {
 
-      return this.http.get<Patient[]>(this.getApiUrl(url), { params: options });
+      return this.http.get(this.getApiUrl(url), { params: options });
     }
     /**
      * get

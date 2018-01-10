@@ -37,7 +37,6 @@ export class SearchPatientComponent implements OnInit {
  
   private unsubscribe: Subject<void> = new Subject<void>();
   PatientList: SearchPatient[] = new Array<SearchPatient>();
-  searchPatient: SearchPatient = new SearchPatient();
   private patient: Patient;
   Patientcols: any[];
   constructor(
@@ -64,19 +63,20 @@ export class SearchPatientComponent implements OnInit {
   SearchPatient() {
     let Patientres1: SearchPatient = new SearchPatient();
 
-    this._patientService.getPatients(this.PatientID, this.FirstName, this.LastName)
+    this._patientService.getPatients(this.PatientID.toString(), this.FirstName, this.LastName)
       .subscribe(data => {
-        data.forEach(Patient => {
-          let searchPatient = new SearchPatient();
-          this.searchPatient.Title = Patient.title;
-          this.searchPatient.FirstName = Patient.firstName;
-          this.searchPatient.LastName = Patient.lastName;
-          this.searchPatient.DOB = Patient.dateOfBirth;
-          this.searchPatient.Gender = Patient.gender;
-          this.searchPatient.PatientId = Patient.id;
-          this.PatientList.push(this.searchPatient);
-        });
-
+        if (data != null && data.length > 0) {
+          data.forEach(Patient => {
+            let searchPatient = new SearchPatient();
+            searchPatient.Title = Patient.title;
+            searchPatient.FirstName = Patient.firstName;
+            searchPatient.LastName = Patient.lastName;
+            searchPatient.DOB = Patient.dateOfBirth;
+            searchPatient.Gender = Patient.gender;
+            searchPatient.PatientId = Patient.id;
+            this.PatientList.push(searchPatient);
+          });
+        }
     }, err => {
       console.log(err);
       });
