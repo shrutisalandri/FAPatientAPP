@@ -26,12 +26,11 @@ namespace WebAPI.Controllers
         public HomeController(IConfiguration configuration)
         {
             _configuration = configuration;
-            logger = new LoggerConfiguration().WriteTo.File("log-.txt", rollingInterval: RollingInterval.Day)
+            logger = new LoggerConfiguration().WriteTo.File("PatientAPILog.txt", rollingInterval: RollingInterval.Day)
                           .CreateLogger();
         }
 
 
-        [HttpGet]
         [HttpGet]
         [Route("api/GetPatients")]
         public List<CommonPatient> GetPatients(string PMS)
