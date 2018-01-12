@@ -19,7 +19,7 @@ namespace BusinessModels
 
         public string Title { set; get; }
 
-        public string Middle { set; get; }
+        //public string Middle { set; get; }
 
         public string Gender { set; get; }
 

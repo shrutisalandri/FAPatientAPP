@@ -5,21 +5,29 @@ namespace BusinessModels
 {
     public class OptomateAppointment : Appointment
     {
+        
         public int Id { get; set; }
-        public int ClientNum { get; set; }
+
         public DateTime Start { get; set; }
+
         public DateTime Finish { get; set; }
-        public string Caption { get; set; }
+
         public string Branch { get; set; }
-        public string Resourceid { get; set; }
-        public string Appttype { get; set; }
-        public string Staff { get; set; }
-        public DateTime? Transdate { get; set; }
-        public string Source { get; set; }
-        public string Message { get; set; }
-        public string Location { get; set; }
-        public bool smsconfirm { get; set; }
-        public bool sentsms { get; set; }
-        public string syncId { get; set; }
+
+        public string Optom { get; set; }
+
+        public string Apptype { get; set; }
+
+        public int ClientNum { get; set; }
+
+        public string Given { set; get; }
+
+        public string Surname { set; get; }
+
+        public DateTime? BirthDate { set; get; }
+
+        public string Title { set; get; }
+
+        public string Sex { get; set; }
     }
 }

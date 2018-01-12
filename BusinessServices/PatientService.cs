@@ -1,55 +1,119 @@
 ﻿using System.Collections.Generic;
-using BusinessModels.Abstracts;
 using DataServices.Interfaces;
 using BusinessModels.DTOS;
 using System;
 using BusinessServices.Interfaces;
+using Serilog;
 
 namespace BusinessServices
 {
     public class PatientService : IPatientService
     {
         private IRepository _repo;
+        private ILogger Log;
 
-        public PatientService(IRepository repo)
+        public PatientService(IRepository repo, ILogger logger)
         {
             _repo = repo;
+            Log = logger;
         }
 
         public CommonAppointment GetAppointment(int appointmentId)
         {
-            return _repo.GetAppointment(appointmentId);
+            try
+            {
+                return _repo.GetAppointment(appointmentId);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+
+            return null;
         }
 
         public List<CommonAppointment> GetAppointments(DateTime startDate, DateTime endDate)
         {
-            return _repo.GetAppointments(startDate, endDate);
+            try
+            {
+                return _repo.GetAppointments(startDate, endDate);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+
+            return null;
         }
 
         public CommonPatient GetPatient(int patientId)
         {
-            return _repo.GetPatient(patientId);
+            try
+            {
+                return _repo.GetPatient(patientId);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+
+            return null;
         }
 
         public List<CommonPatient> GetPatients()
         {
-            return _repo.GetPatients();
+            try
+            {
+                return _repo.GetPatients();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+
+            return null;
         }
 
         public List<CommonPatient> SearchPatients(int patientId, string firstName, string lastName)
         {
-            return _repo.SearchPatients(patientId, firstName, lastName);
-        }
+            try
+            {
+                return _repo.SearchPatients(patientId, firstName, lastName);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
 
+            return null;
+        }
 
         public int InsertPatient(CommonPatient patient)
         {
-            return _repo.InsertPatient(patient);
+            try
+            {
+                return _repo.InsertPatient(patient);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+
+            return 0;
         }
 
         public bool UpdatePatient(CommonPatient patient)
         {
-            return _repo.UpdatePatient(patient);
+            try
+            {
+                return _repo.UpdatePatient(patient);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+
+            return false;
         }
     }
 }
